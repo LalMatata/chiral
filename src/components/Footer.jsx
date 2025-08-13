@@ -1,122 +1,74 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, Linkedin, Twitter } from 'lucide-react'
-import { useLanguage } from '../contexts/LanguageContext'
+import { Mail, Phone, MapPin } from 'lucide-react'
 
 const Footer = () => {
-  const { t, isRTL } = useLanguage()
-
   return (
-    <footer className="bg-muted/50 border-t">
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Company Info */}
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="text-xl font-bold text-primary">CHIRAL</div>
-              <div className={`ml-2 text-sm text-muted-foreground ${isRTL ? 'mr-2 ml-0' : ''}`}>
-                Robotics
+          <div>
+            <div className="flex items-center mb-4">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-lg">C</span>
               </div>
+              <span className="text-xl font-bold">CHIRAL</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {t('home.trustDescription')}
+            <p className="text-gray-300 mb-4">
+              Advanced quadruped robotics solutions for industrial automation and inspection.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Quick Links</h3>
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/products" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.products')}
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link to="/applications" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.applications')}
+                <Link to="/products" className="text-gray-300 hover:text-white transition-colors">
+                  Products
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.about')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.contact')}
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Products */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Products</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/products/x30" className="text-sm text-muted-foreground hover:text-primary">
-                  X30 Series
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/x20" className="text-sm text-muted-foreground hover:text-primary">
-                  X20 Series
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/lite3" className="text-sm text-muted-foreground hover:text-primary">
-                  Lite3 Series
+                <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Contact</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>Technology Park, Tel Aviv, Israel</span>
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <Mail className="h-5 w-5 text-blue-400 mr-3" />
+                <span className="text-gray-300">sales@chiral-robotics.com</span>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <span>+972-3-XXX-XXXX</span>
+              <div className="flex items-center">
+                <Phone className="h-5 w-5 text-blue-400 mr-3" />
+                <span className="text-gray-300">+1 (555) 123-4567</span>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <span>info@chiral-robotics.co.il</span>
+              <div className="flex items-start">
+                <MapPin className="h-5 w-5 text-blue-400 mr-3 mt-1" />
+                <span className="text-gray-300">
+                  123 Innovation Drive<br />
+                  Tech Valley, CA 94000
+                </span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-muted-foreground">
-              © 2024 CHIRAL Robotics Solutions Ltd. All rights reserved.
-            </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary">
-                Terms of Service
-              </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary">
-                Cookie Policy
-              </a>
-            </div>
-          </div>
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+          <p className="text-gray-400">
+            © 2024 CHIRAL Robotics. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
-
-// Components
+import { LanguageProvider } from './contexts/LanguageContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './components/pages/Home'
@@ -13,22 +11,20 @@ import About from './components/pages/About'
 import Contact from './components/pages/Contact'
 import Demo from './components/pages/Demo'
 import Analytics from './components/Analytics'
-
-// Language Context
-import { LanguageProvider } from './contexts/LanguageContext'
+import './App.css'
 
 function App() {
   return (
     <LanguageProvider>
       <Router>
-        <div className="min-h-screen bg-background">
+        <div className="App">
           <Analytics />
           <Header />
           <main>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
-              <Route path="/products/:model" element={<ProductDetail />} />
+              <Route path="/products/:productId" element={<ProductDetail />} />
               <Route path="/applications" element={<Applications />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
@@ -37,7 +33,7 @@ function App() {
               {/* Hebrew routes */}
               <Route path="/he" element={<Home />} />
               <Route path="/he/products" element={<Products />} />
-              <Route path="/he/products/:model" element={<ProductDetail />} />
+              <Route path="/he/products/:productId" element={<ProductDetail />} />
               <Route path="/he/applications" element={<Applications />} />
               <Route path="/he/about" element={<About />} />
               <Route path="/he/contact" element={<Contact />} />
