@@ -11,6 +11,8 @@ import ProductDetail from './components/pages/ProductDetail'
 import Applications from './components/pages/Applications'
 import About from './components/pages/About'
 import Contact from './components/pages/Contact'
+import Demo from './components/pages/Demo'
+import Analytics from './components/Analytics'
 
 // Language Context
 import { LanguageProvider } from './contexts/LanguageContext'
@@ -20,6 +22,7 @@ function App() {
     <LanguageProvider>
       <Router>
         <div className="min-h-screen bg-background">
+          <Analytics />
           <Header />
           <main>
             <Routes>
@@ -29,6 +32,16 @@ function App() {
               <Route path="/applications" element={<Applications />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/demo" element={<Demo />} />
+              
+              {/* Hebrew routes */}
+              <Route path="/he" element={<Home />} />
+              <Route path="/he/products" element={<Products />} />
+              <Route path="/he/products/:model" element={<ProductDetail />} />
+              <Route path="/he/applications" element={<Applications />} />
+              <Route path="/he/about" element={<About />} />
+              <Route path="/he/contact" element={<Contact />} />
+              <Route path="/he/demo" element={<Demo />} />
             </Routes>
           </main>
           <Footer />

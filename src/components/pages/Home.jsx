@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,27 +16,68 @@ import teamDiverse from '../../assets/images/company/team-diverse.jpg'
 const Home = () => {
   const { t, isRTL } = useLanguage()
 
+  // SEO optimization: Update page title and meta description dynamically
+  useEffect(() => {
+    document.title = 'CHIRAL - Advanced Quadruped Robotics for Israeli Industry | Industrial Automation Solutions'
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'CHIRAL provides cutting-edge quadruped robotics solutions for Israeli industrial enterprises. Autonomous inspection robots for power utilities, manufacturing, and security applications. Contact us for a demo.')
+    }
+    
+    // Add structured data for homepage
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "CHIRAL - Advanced Quadruped Robotics for Israeli Industry",
+      "description": "Leading provider of industrial quadruped robotics solutions in Israel",
+      "url": "https://chiral.manus.space",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "CHIRAL Robotics",
+        "description": "Advanced quadruped robotics solutions for Israeli industrial enterprises"
+      }
+    }
+    
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.text = JSON.stringify(structuredData)
+    document.head.appendChild(script)
+    
+    return () => {
+      // Cleanup
+      const existingScript = document.querySelector('script[type="application/ld+json"]')
+      if (existingScript && existingScript.text.includes('WebPage')) {
+        document.head.removeChild(existingScript)
+      }
+    }
+  }, [])
+
   const products = [
     {
       title: t('home.x30Title'),
       description: t('home.x30Description'),
       image: x30Hero,
       link: '/products/x30',
-      features: ['IP67 Protection', '4m/s Max Speed', '2.5-4h Endurance', '10km Range']
+      features: ['IP67 Protection', '4m/s Max Speed', '2.5-4h Endurance', '10km Range'],
+      keywords: 'industrial quadruped robot, autonomous inspection robot, IP67 robot'
     },
     {
       title: t('home.x20Title'),
       description: t('home.x20Description'),
       image: x20Main,
       link: '/products/x20',
-      features: ['20kg Payload', 'IP66 Protection', '15km Range', 'All-Terrain']
+      features: ['20kg Payload', 'IP66 Protection', '15km Range', 'All-Terrain'],
+      keywords: 'patrol robot, security robot, surveillance robot'
     },
     {
       title: t('home.lite3Title'),
       description: t('home.lite3Description'),
       image: lite3Main,
       link: '/products/lite3',
-      features: ['12kg Weight', '40° Slope', 'SDK Included', 'Research Platform']
+      features: ['12kg Weight', '40° Slope', 'SDK Included', 'Research Platform'],
+      keywords: 'research robot, educational robot, robot development platform'
     }
   ]
 
@@ -45,7 +86,8 @@ const Home = () => {
       title: t('home.powerTitle'),
       description: t('home.powerDescription'),
       icon: Zap,
-      image: industrialFacility
+      image: industrialFacility,
+      keywords: 'power plant inspection, utility automation, electrical infrastructure'
     },
     {
       title: t('home.securityTitle'),
