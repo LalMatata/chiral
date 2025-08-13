@@ -207,7 +207,8 @@ app.get('/api/leads', (req, res) => {
   try {
     const leads = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
     res.json(leads);
-  } catch (error) {
+  } catch (err) {
+    console.error('Error retrieving leads:', err);
     res.status(500).json({ error: 'Failed to retrieve leads' });
   }
 });

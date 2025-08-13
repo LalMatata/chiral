@@ -7,9 +7,9 @@ async function testAnalyticsTrackingAdvanced() {
     console.log('📊 Advanced Analytics Testing (requires Puppeteer)');
     console.log('==================================================\\n');
     
+    let browser = null;
     try {
         const puppeteer = await import('puppeteer');
-        let browser = null;
         const results = {
             gaLoaded: false,
             gtagPresent: false,
@@ -227,22 +227,13 @@ async function testAnalyticsTrackingAdvanced() {
         
         return results;
         
-        } catch (error) {
-            console.error('Advanced analytics test failed:', error.message);
-            results.errors.push({
-                message: error.message,
-                stack: error.stack,
-                timestamp: Date.now()
-            });
-            return results;
-        } finally {
-            if (browser) {
-                await browser.close();
-            }
-        }
     } catch (error) {
         console.log('⚠️  Puppeteer not available, skipping advanced tests');
         return null;
+    } finally {
+        if (browser) {
+            await browser.close();
+        }
     }
 }
 

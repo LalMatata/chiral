@@ -39,8 +39,8 @@ async function debugContactForm() {
             try {
                 const errorData = JSON.parse(responseText);
                 console.log('Error details:', errorData);
-            } catch (e) {
-                console.log('Raw error response:', responseText);
+            } catch (err) {
+                console.log('Raw error response:', responseText, err.message);
             }
         } else {
             console.log('\n✅ Request successful!');
@@ -67,8 +67,8 @@ async function debugContactForm() {
         } else {
             console.log('❌ Backend returned error on health check');
         }
-    } catch (e) {
-        console.log('❌ Backend is not reachable');
+    } catch (err) {
+        console.log('❌ Backend is not reachable:', err.message);
     }
 }
 
