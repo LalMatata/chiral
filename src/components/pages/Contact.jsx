@@ -1,101 +1,23 @@
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, Calendar, Download } from 'lucide-react'
-import { useLanguage } from '../../contexts/LanguageContext'
+import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react'
 
 const Contact = () => {
-  const { t, isRTL } = useLanguage()
-  const [demoForm, setDemoForm] = useState({
-    companyName: '',
-    contactPerson: '',
+  const [formData, setFormData] = useState({
+    name: '',
     email: '',
+    company: '',
     phone: '',
     industry: '',
-    application: '',
-    attendees: '',
-    preferredDate: '',
-    requirements: ''
-  })
-
-  const [salesForm, setSalesForm] = useState({
-    companyName: '',
-    contactPerson: '',
-    email: '',
-    phone: '',
-    industry: '',
-    currentChallenges: '',
+    message: '',
     budget: '',
-    timeline: '',
-    technicalRequirements: '',
-    supportNeeds: ''
+    timeline: ''
   })
-
-  const handleDemoSubmit = (e) => {
-    e.preventDefault()
-    // Handle demo form submission
-    console.log('Demo form submitted:', demoForm)
-    alert('Demo request submitted successfully! We will contact you within 24 hours.')
-  }
-
-  const handleSalesSubmit = (e) => {
-    e.preventDefault()
-    // Handle sales form submission
-    console.log('Sales form submitted:', salesForm)
-    alert('Sales inquiry submitted successfully! Our team will respond within 24 hours.')
-  }
-
-  const contactInfo = [
-    {
-      icon: MapPin,
-      title: 'Headquarters',
-      details: [
-        'CHIRAL Robotics Solutions Ltd.',
-        'Technology Park, Tel Aviv, Israel',
-        'Building 15, Floor 3'
-      ]
-    },
-    {
-      icon: Phone,
-      title: 'Phone',
-      details: [
-        'Main: +972-3-XXX-XXXX',
-        'Sales: +972-3-XXX-XXXX',
-        'Support: +972-3-XXX-XXXX',
-        'Emergency: +972-5X-XXX-XXXX (24/7)'
-      ]
-    },
-    {
-      icon: Mail,
-      title: 'Email',
-      details: [
-        'info@chiral-robotics.co.il',
-        'sales@chiral-robotics.co.il',
-        'support@chiral-robotics.co.il',
-        'partnerships@chiral-robotics.co.il'
-      ]
-    },
-    {
-      icon: Clock,
-      title: 'Business Hours',
-      details: [
-        'Sunday - Thursday: 8:00 AM - 6:00 PM',
-        'Friday: 8:00 AM - 2:00 PM',
-        'Saturday: Closed',
-        'Emergency Support: 24/7'
-      ]
-    }
-  ]
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const industries = [
     'Power & Utilities',
     'Manufacturing',
-    'Chemical Processing',
     'Oil & Gas',
     'Mining',
     'Security & Defense',
@@ -103,438 +25,365 @@ const Contact = () => {
     'Other'
   ]
 
-  const applications = [
-    'Equipment Inspection',
-    'Security Patrol',
-    'Environmental Monitoring',
-    'Emergency Response',
-    'Research & Development',
-    'Training & Education',
-    'Other'
-  ]
-
   const budgetRanges = [
-    'Under $100K',
-    '$100K - $250K',
-    '$250K - $500K',
-    '$500K - $1M',
-    'Over $1M',
-    'To be discussed'
+    'Under $50,000',
+    '$50,000 - $100,000',
+    '$100,000 - $250,000',
+    '$250,000 - $500,000',
+    'Over $500,000',
+    'Not sure yet'
   ]
 
   const timelines = [
-    'Immediate (1-3 months)',
-    'Short-term (3-6 months)',
-    'Medium-term (6-12 months)',
-    'Long-term (12+ months)',
-    'Planning phase'
+    'Immediate (within 1 month)',
+    'Short term (1-3 months)',
+    'Medium term (3-6 months)',
+    'Long term (6+ months)',
+    'Just exploring options'
   ]
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const validateForm = () => {
+    const errors = []
+    
+    if (!formData.name.trim()) {
+      errors.push('Full name is required')
+    }
+    
+    if (!formData.email.trim()) {
+      errors.push('Email address is required')
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push('Please enter a valid email address')
+    }
+    
+    if (!formData.company.trim()) {
+      errors.push('Company name is required')
+    }
+    
+    if (!formData.industry) {
+      errors.push('Please select your industry')
+    }
+    
+    if (!formData.message.trim()) {
+      errors.push('Project details are required')
+    }
+    
+    return errors
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    // Client-side validation
+    const validationErrors = validateForm()
+    if (validationErrors.length > 0) {
+      alert('Please fix the following errors:\n\n' + validationErrors.join('\n'))
+      return
+    }
+    
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('http://localhost:5001/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const result = await response.json()
+
+      if (response.ok && result.success) {
+        setIsSubmitted(true)
+      } else {
+        alert('Error submitting form: ' + (result.error || 'Unknown error'))
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Network error. Please check if the server is running and try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-white rounded-2xl shadow-xl p-12">
+            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Thank You for Your Interest!
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+              We've received your inquiry and our team will contact you within 24 hours 
+              to discuss your robotics needs and schedule a demonstration.
+            </p>
+            <div className="bg-blue-50 rounded-lg p-6 mb-8">
+              <h3 className="font-semibold text-blue-900 mb-2">What happens next?</h3>
+              <ul className="text-blue-800 text-left space-y-2">
+                <li>• Our technical team will review your requirements</li>
+                <li>• We'll prepare a customized solution proposal</li>
+                <li>• Schedule a live demonstration of our robots</li>
+                <li>• Provide detailed pricing and implementation timeline</li>
+              </ul>
+            </div>
+            <button
+              onClick={() => {
+                setIsSubmitted(false)
+                setFormData({
+                  name: '',
+                  email: '',
+                  company: '',
+                  phone: '',
+                  industry: '',
+                  message: '',
+                  budget: '',
+                  timeline: ''
+                })
+              }}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Submit Another Inquiry
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center space-y-6 mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-            {t('contact.title')}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Get Your Custom Quote
           </h1>
-          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            {t('contact.subtitle')}
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Ready to transform your operations with CHIRAL's advanced quadruped robots? 
+            Tell us about your needs and we'll provide a customized solution.
           </p>
         </div>
 
-        {/* Contact Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {contactInfo.map((info, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-lg w-fit">
-                  <info.icon className="h-6 w-6 text-primary" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Contact Information */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+              
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <Mail className="h-6 w-6 text-blue-600 mr-4 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Email</h3>
+                    <p className="text-gray-600">sales@chiral-robotics.com</p>
+                  </div>
                 </div>
-                <CardTitle className="text-lg">{info.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-1">
-                  {info.details.map((detail, detailIndex) => (
-                    <p key={detailIndex} className="text-sm text-muted-foreground">
-                      {detail}
+                
+                <div className="flex items-start">
+                  <Phone className="h-6 w-6 text-blue-600 mr-4 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Phone</h3>
+                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <MapPin className="h-6 w-6 text-blue-600 mr-4 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Address</h3>
+                    <p className="text-gray-600">
+                      123 Innovation Drive<br />
+                      Tech Valley, CA 94000<br />
+                      United States
                     </p>
-                  ))}
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </div>
 
-        {/* Contact Forms */}
-        <Tabs defaultValue="demo" className="mb-20">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="demo" className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4" />
-              <span>{t('contact.demoTitle')}</span>
-            </TabsTrigger>
-            <TabsTrigger value="sales" className="flex items-center space-x-2">
-              <MessageSquare className="h-4 w-4" />
-              <span>{t('contact.salesTitle')}</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="demo" className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">{t('contact.demoTitle')}</CardTitle>
-                <CardDescription className="text-base">
-                  {t('contact.demoDescription')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleDemoSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-company">{t('contact.companyName')} *</Label>
-                      <Input
-                        id="demo-company"
-                        value={demoForm.companyName}
-                        onChange={(e) => setDemoForm({...demoForm, companyName: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-contact">{t('contact.contactPerson')} *</Label>
-                      <Input
-                        id="demo-contact"
-                        value={demoForm.contactPerson}
-                        onChange={(e) => setDemoForm({...demoForm, contactPerson: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-email">{t('contact.email')} *</Label>
-                      <Input
-                        id="demo-email"
-                        type="email"
-                        value={demoForm.email}
-                        onChange={(e) => setDemoForm({...demoForm, email: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-phone">{t('contact.phone')} *</Label>
-                      <Input
-                        id="demo-phone"
-                        type="tel"
-                        value={demoForm.phone}
-                        onChange={(e) => setDemoForm({...demoForm, phone: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-industry">{t('contact.industry')} *</Label>
-                      <Select value={demoForm.industry} onValueChange={(value) => setDemoForm({...demoForm, industry: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your industry" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {industries.map((industry) => (
-                            <SelectItem key={industry} value={industry}>
-                              {industry}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-application">Application Interest</Label>
-                      <Select value={demoForm.application} onValueChange={(value) => setDemoForm({...demoForm, application: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select application" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {applications.map((application) => (
-                            <SelectItem key={application} value={application}>
-                              {application}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-attendees">Number of Attendees</Label>
-                      <Input
-                        id="demo-attendees"
-                        type="number"
-                        min="1"
-                        max="20"
-                        value={demoForm.attendees}
-                        onChange={(e) => setDemoForm({...demoForm, attendees: e.target.value})}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-date">Preferred Date</Label>
-                      <Input
-                        id="demo-date"
-                        type="date"
-                        value={demoForm.preferredDate}
-                        onChange={(e) => setDemoForm({...demoForm, preferredDate: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="demo-requirements">Special Requirements or Questions</Label>
-                    <Textarea
-                      id="demo-requirements"
-                      rows={4}
-                      value={demoForm.requirements}
-                      onChange={(e) => setDemoForm({...demoForm, requirements: e.target.value})}
-                      placeholder="Please describe any specific requirements, questions, or areas of interest for the demonstration..."
-                    />
-                  </div>
-
-                  <Button type="submit" size="lg" className="w-full">
-                    <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                    {t('contact.submit')}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="sales" className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">{t('contact.salesTitle')}</CardTitle>
-                <CardDescription className="text-base">
-                  {t('contact.salesDescription')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSalesSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-company">{t('contact.companyName')} *</Label>
-                      <Input
-                        id="sales-company"
-                        value={salesForm.companyName}
-                        onChange={(e) => setSalesForm({...salesForm, companyName: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-contact">{t('contact.contactPerson')} *</Label>
-                      <Input
-                        id="sales-contact"
-                        value={salesForm.contactPerson}
-                        onChange={(e) => setSalesForm({...salesForm, contactPerson: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-email">{t('contact.email')} *</Label>
-                      <Input
-                        id="sales-email"
-                        type="email"
-                        value={salesForm.email}
-                        onChange={(e) => setSalesForm({...salesForm, email: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-phone">{t('contact.phone')} *</Label>
-                      <Input
-                        id="sales-phone"
-                        type="tel"
-                        value={salesForm.phone}
-                        onChange={(e) => setSalesForm({...salesForm, phone: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-industry">{t('contact.industry')} *</Label>
-                    <Select value={salesForm.industry} onValueChange={(value) => setSalesForm({...salesForm, industry: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your industry" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {industries.map((industry) => (
-                          <SelectItem key={industry} value={industry}>
-                            {industry}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-challenges">Current Challenges or Needs *</Label>
-                    <Textarea
-                      id="sales-challenges"
-                      rows={3}
-                      value={salesForm.currentChallenges}
-                      onChange={(e) => setSalesForm({...salesForm, currentChallenges: e.target.value})}
-                      placeholder="Please describe your current operational challenges or specific needs..."
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-budget">Budget Considerations</Label>
-                      <Select value={salesForm.budget} onValueChange={(value) => setSalesForm({...salesForm, budget: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select budget range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {budgetRanges.map((range) => (
-                            <SelectItem key={range} value={range}>
-                              {range}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-timeline">Implementation Timeline</Label>
-                      <Select value={salesForm.timeline} onValueChange={(value) => setSalesForm({...salesForm, timeline: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select timeline" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {timelines.map((timeline) => (
-                            <SelectItem key={timeline} value={timeline}>
-                              {timeline}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-technical">Technical Requirements</Label>
-                    <Textarea
-                      id="sales-technical"
-                      rows={3}
-                      value={salesForm.technicalRequirements}
-                      onChange={(e) => setSalesForm({...salesForm, technicalRequirements: e.target.value})}
-                      placeholder="Please describe any specific technical requirements or environmental conditions..."
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-support">Support Needs</Label>
-                    <Textarea
-                      id="sales-support"
-                      rows={3}
-                      value={salesForm.supportNeeds}
-                      onChange={(e) => setSalesForm({...salesForm, supportNeeds: e.target.value})}
-                      placeholder="Please describe your expected support requirements (training, maintenance, etc.)..."
-                    />
-                  </div>
-
-                  <Button type="submit" size="lg" className="w-full">
-                    <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                    {t('contact.submit')}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        {/* Support Channels */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-            {t('contact.supportTitle')}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-blue-500/10 rounded-lg w-fit">
-                  <Phone className="h-8 w-8 text-blue-500" />
-                </div>
-                <CardTitle>Phone Support</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Direct access to technical specialists for immediate assistance with urgent issues.
+              <div className="mt-8 p-6 bg-blue-50 rounded-lg">
+                <h3 className="font-semibold text-blue-900 mb-2">Response Time</h3>
+                <p className="text-blue-800 text-sm">
+                  We typically respond to all inquiries within 24 hours during business days.
                 </p>
-                <Button variant="outline" className="w-full">
-                  Call Support
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-green-500/10 rounded-lg w-fit">
-                  <Mail className="h-8 w-8 text-green-500" />
-                </div>
-                <CardTitle>Email Support</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Comprehensive technical documentation and support request submission.
-                </p>
-                <Button variant="outline" className="w-full">
-                  Email Support
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-purple-500/10 rounded-lg w-fit">
-                  <Download className="h-8 w-8 text-purple-500" />
-                </div>
-                <CardTitle>Resources</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Access technical documentation, user manuals, and training materials.
-                </p>
-                <Button variant="outline" className="w-full">
-                  Download Resources
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="bg-muted/50 rounded-2xl p-12 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Visit Our Facilities
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Located in the heart of Tel Aviv's Technology Park, our facilities include demonstration centers, 
-            training facilities, and comprehensive technical support capabilities.
-          </p>
-          <div className="bg-muted rounded-lg h-64 flex items-center justify-center mb-6">
-            <div className="text-center">
-              <MapPin className="h-12 w-12 text-primary mx-auto mb-4" />
-              <p className="text-lg font-semibold">Interactive Map</p>
-              <p className="text-muted-foreground">Technology Park, Tel Aviv, Israel</p>
+              </div>
             </div>
           </div>
-          <Button size="lg">
-            Get Directions
-          </Button>
+
+          {/* Contact Form */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Request a Quote</h2>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="John Smith"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="john@company.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      required
+                      value={formData.company}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Your Company"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="+1 (555) 123-4567"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-2">
+                    Industry *
+                  </label>
+                  <select
+                    id="industry"
+                    name="industry"
+                    required
+                    value={formData.industry}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select your industry</option>
+                    {industries.map((industry) => (
+                      <option key={industry} value={industry}>{industry}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                      Budget Range
+                    </label>
+                    <select
+                      id="budget"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select budget range</option>
+                      {budgetRanges.map((range) => (
+                        <option key={range} value={range}>{range}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-2">
+                      Implementation Timeline
+                    </label>
+                    <select
+                      id="timeline"
+                      name="timeline"
+                      value={formData.timeline}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select timeline</option>
+                      {timelines.map((timeline) => (
+                        <option key={timeline} value={timeline}>{timeline}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Details *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={6}
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Please describe your specific needs, application requirements, and any questions you have about our quadruped robots..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Send Request
+                      <Send className="ml-2 h-5 w-5" />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
