@@ -1,0 +1,514 @@
+{
+  "timestamp": "2025-08-13T15:13:01.488Z",
+  "tests": {
+    "rateLimit": {
+      "description": "Test rate limiting of 5 form submissions per 15 minutes",
+      "results": [
+        {
+          "requestNumber": 1,
+          "status": 200,
+          "success": true,
+          "message": "Form submitted successfully",
+          "responseTime": 224,
+          "rateLimitHeaders": {}
+        },
+        {
+          "requestNumber": 2,
+          "status": 200,
+          "success": true,
+          "message": "Form submitted successfully",
+          "responseTime": 21,
+          "rateLimitHeaders": {}
+        },
+        {
+          "requestNumber": 3,
+          "status": 200,
+          "success": true,
+          "message": "Form submitted successfully",
+          "responseTime": 103,
+          "rateLimitHeaders": {}
+        },
+        {
+          "requestNumber": 4,
+          "status": 200,
+          "success": true,
+          "message": "Form submitted successfully",
+          "responseTime": 21,
+          "rateLimitHeaders": {}
+        },
+        {
+          "requestNumber": 5,
+          "status": 200,
+          "success": true,
+          "message": "Form submitted successfully",
+          "responseTime": 22,
+          "rateLimitHeaders": {}
+        },
+        {
+          "requestNumber": 6,
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 9,
+          "rateLimitHeaders": {}
+        },
+        {
+          "requestNumber": 7,
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 4,
+          "rateLimitHeaders": {}
+        }
+      ],
+      "analysis": {
+        "totalRequests": 7,
+        "successfulRequests": 5,
+        "blockedRequests": 2,
+        "rateLimitWorking": true
+      }
+    },
+    "xssPrevention": {
+      "description": "Test XSS prevention using various malicious payloads",
+      "results": [
+        {
+          "payload": "<script>alert(\"XSS\")</script>",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 6,
+          "sanitized": false
+        },
+        {
+          "payload": "<img src=\"x\" onerror=\"alert('XSS')\">",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 9,
+          "sanitized": false
+        },
+        {
+          "payload": "javascript:alert(\"XSS\")",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 6,
+          "sanitized": false
+        },
+        {
+          "payload": "<svg onload=\"alert('XSS')\">",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 20,
+          "sanitized": false
+        },
+        {
+          "payload": "<iframe src=\"javascript:alert('XSS')\">",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 3,
+          "sanitized": false
+        },
+        {
+          "payload": "\"><script>alert(\"XSS\")</script>",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 49,
+          "sanitized": false
+        },
+        {
+          "payload": "' OR 1=1--",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 4,
+          "sanitized": false
+        },
+        {
+          "payload": "<meta http-equiv=\"refresh\" content=\"0;url=javascript:alert('XSS')\">",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "responseTime": 3,
+          "sanitized": false
+        }
+      ],
+      "analysis": {
+        "totalPayloads": 8,
+        "sanitizedPayloads": 0,
+        "blockedPayloads": 8,
+        "xssProtectionWorking": true
+      }
+    },
+    "authentication": {
+      "description": "Test API authentication requirements for protected endpoints",
+      "results": [
+        {
+          "test": "No API Key",
+          "status": 401,
+          "success": false,
+          "message": "Unauthorized access",
+          "shouldBeBlocked": true,
+          "actuallyBlocked": true
+        },
+        {
+          "test": "Invalid API Key",
+          "status": 401,
+          "success": false,
+          "message": "Unauthorized access",
+          "shouldBeBlocked": true,
+          "actuallyBlocked": true
+        },
+        {
+          "test": "Invalid Query API Key",
+          "status": 401,
+          "success": false,
+          "message": "Unauthorized access",
+          "shouldBeBlocked": true,
+          "actuallyBlocked": true
+        }
+      ],
+      "analysis": {
+        "totalTests": 3,
+        "correctlyBlocked": 3,
+        "authenticationWorking": true
+      }
+    },
+    "fieldInjection": {
+      "description": "Test prevention of malicious field injection attacks",
+      "results": [
+        {
+          "testName": "Admin Access Injection",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "maliciousFields": [
+            "adminAccess",
+            "isAdmin",
+            "role",
+            "permissions"
+          ],
+          "fieldsFiltered": false
+        },
+        {
+          "testName": "Database Field Injection",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "maliciousFields": [
+            "id",
+            "userId",
+            "password"
+          ],
+          "fieldsFiltered": false
+        },
+        {
+          "testName": "Function Injection",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "maliciousFields": [
+            "exec",
+            "eval",
+            "constructor"
+          ],
+          "fieldsFiltered": false
+        }
+      ],
+      "analysis": {
+        "totalTests": 3,
+        "successfullyFiltered": 3,
+        "fieldFilteringWorking": true
+      }
+    },
+    "typeValidation": {
+      "description": "Test type validation for required string fields",
+      "results": [
+        {
+          "testName": "Numeric Fields",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "shouldBeRejected": true,
+          "actuallyRejected": true
+        },
+        {
+          "testName": "Boolean Fields",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "shouldBeRejected": true,
+          "actuallyRejected": true
+        },
+        {
+          "testName": "Array Fields",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "shouldBeRejected": true,
+          "actuallyRejected": true
+        },
+        {
+          "testName": "Object Fields",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "shouldBeRejected": true,
+          "actuallyRejected": true
+        },
+        {
+          "testName": "Null Fields",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "shouldBeRejected": true,
+          "actuallyRejected": true
+        }
+      ],
+      "analysis": {
+        "totalTests": 5,
+        "correctlyRejected": 5,
+        "typeValidationWorking": true
+      }
+    },
+    "largePayload": {
+      "description": "Test payload size limits (1MB maximum)",
+      "results": [
+        {
+          "testName": "1MB Payload",
+          "payloadSize": "~1MB",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "blocked": false
+        },
+        {
+          "testName": ">1MB Payload",
+          "payloadSize": "~1.5MB",
+          "status": 413,
+          "success": false,
+          "message": "Request payload too large",
+          "blocked": true
+        }
+      ],
+      "analysis": {
+        "totalTests": 2,
+        "correctlyBlocked": 2,
+        "payloadLimitWorking": true
+      }
+    },
+    "sqlInjection": {
+      "description": "Test SQL injection prevention using various attack patterns",
+      "results": [
+        {
+          "payload": "'; DROP TABLE users; --",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "' OR '1'='1",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "' OR 1=1--",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "'; DELETE FROM leads; --",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "' UNION SELECT * FROM users--",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "'; INSERT INTO admin VALUES ('hacker', 'password'); --",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "' OR 'x'='x",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        },
+        {
+          "payload": "1'; EXEC sp_configure 'show advanced options', 1--",
+          "status": 429,
+          "success": false,
+          "message": "Too many form submissions, please try again later",
+          "sanitized": false,
+          "blocked": true
+        }
+      ],
+      "analysis": {
+        "totalPayloads": 8,
+        "protectedAgainst": 8,
+        "sqlInjectionProtectionWorking": true
+      }
+    },
+    "emailValidation": {
+      "description": "Test email validation for various email formats and edge cases",
+      "results": [
+        {
+          "email": "valid@example.com",
+          "description": "Standard valid email",
+          "expectedValid": true,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": false
+        },
+        {
+          "email": "test.email+tag@example.co.uk",
+          "description": "Email with plus tag and subdomain",
+          "expectedValid": true,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": false
+        },
+        {
+          "email": "user@domain-with-dash.com",
+          "description": "Domain with dash",
+          "expectedValid": true,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": false
+        },
+        {
+          "email": "test@xn--nxasmq6b.com",
+          "description": "International domain (punycode)",
+          "expectedValid": true,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": false
+        },
+        {
+          "email": "user@123.456.789.123",
+          "description": "IP address domain (should fail)",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "invalid-email",
+          "description": "Missing @ symbol",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "@domain.com",
+          "description": "Missing local part",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "user@",
+          "description": "Missing domain",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "user@.com",
+          "description": "Missing domain name",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "user space@example.com",
+          "description": "Space in local part",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "user@domain",
+          "description": "Missing TLD",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "test@中文.com",
+          "description": "Non-ASCII domain (should be punycode)",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "",
+          "description": "Empty email",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        },
+        {
+          "email": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com",
+          "description": "Very long local part",
+          "expectedValid": false,
+          "status": 429,
+          "actuallyValid": false,
+          "message": "Too many form submissions, please try again later",
+          "validationCorrect": true
+        }
+      ],
+      "analysis": {
+        "totalTests": 14,
+        "correctValidations": 10,
+        "emailValidationWorking": false
+      }
+    }
+  }
+}

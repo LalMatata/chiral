@@ -1,67 +1,71 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, Calendar, Download, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
-import { useLanguage } from '../../contexts/LanguageContext'
+import { Mail, Phone, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
 const Contact = () => {
-  const { t, isRTL } = useLanguage()
-  const [demoLoading, setDemoLoading] = useState(false)
-  const [salesLoading, setSalesLoading] = useState(false)
-  const [demoSuccess, setDemoSuccess] = useState(false)
-  const [salesSuccess, setSalesSuccess] = useState(false)
-  const [demoError, setDemoError] = useState('')
-  const [salesError, setSalesError] = useState('')
+  const [formLoading, setFormLoading] = useState(false)
+  const [formSuccess, setFormSuccess] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [formType, setFormType] = useState('contact')
+  const [productInterest, setProductInterest] = useState('')
   
-  const [demoForm, setDemoForm] = useState({
+  const [formData, setFormData] = useState({
     companyName: '',
     contactPerson: '',
     email: '',
     phone: '',
     industry: '',
-    application: '',
-    attendees: '',
-    preferredDate: '',
-    requirements: ''
+    message: ''
   })
+  
+  // Handle URL parameters for pre-filling forms
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const product = urlParams.get('product')
+    const type = urlParams.get('type')
+    
+    if (product) {
+      setProductInterest(product)
+      const productMessages = {
+        'x30': 'I\'m interested in the X30 Series robot for industrial applications.',
+        'x20': 'I\'m interested in the X20 Series robot for patrol and inspection.',
+        'lite3': 'I\'m interested in the Lite3 Series robot for research and development.'
+      }
+      setFormData(prev => ({
+        ...prev,
+        message: productMessages[product] || `I'm interested in the ${product} robot.`
+      }))
+    }
+    
+    if (type) {
+      setFormType(type)
+    }
+  }, [])
 
-  const [salesForm, setSalesForm] = useState({
-    companyName: '',
-    contactPerson: '',
-    email: '',
-    phone: '',
-    industry: '',
-    currentChallenges: '',
-    budget: '',
-    timeline: '',
-    technicalRequirements: '',
-    supportNeeds: ''
-  })
-
-  const handleDemoSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setDemoLoading(true)
-    setDemoError('')
-    setDemoSuccess(false)
+    setFormLoading(true)
+    setFormError('')
+    setFormSuccess(false)
     
     // Client-side validation
-    if (!demoForm.companyName || !demoForm.contactPerson || !demoForm.email) {
-      setDemoError('Please fill in all required fields: Company Name, Contact Person, and Email.')
-      setDemoLoading(false)
+    if (!formData.companyName || !formData.contactPerson || !formData.email || !formData.message) {
+      setFormError('Please fill in all required fields.')
+      setFormLoading(false)
       return
     }
     
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(demoForm.email)) {
-      setDemoError('Please enter a valid email address.')
-      setDemoLoading(false)
+    if (!emailRegex.test(formData.email)) {
+      setFormError('Please enter a valid email address.')
+      setFormLoading(false)
       return
     }
     
@@ -70,8 +74,8 @@ const Contact = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...demoForm,
-          formType: 'demo',
+          ...formData,
+          formType: 'lead',
           timestamp: new Date().toISOString()
         })
       })
@@ -81,118 +85,45 @@ const Contact = () => {
         throw new Error(errorData.error || 'Failed to submit form')
       }
       
-      setDemoSuccess(true)
+      setFormSuccess(true)
       
-      // Track successful form submission
+      // Enhanced tracking for successful form submission
       if (window.trackLead) {
-        window.trackLead('demo');
+        window.trackLead(formType, productInterest);
+      }
+      if (window.fbTrackLead) {
+        const leadValue = formType === 'quote' ? 2500 : formType === 'demo' ? 5000 : 1000
+        window.fbTrackLead(leadValue);
+      }
+      if (window.linkedinTrackLead) {
+        window.linkedinTrackLead();
       }
       
-      setDemoForm({
+      setFormData({
         companyName: '',
         contactPerson: '',
         email: '',
         phone: '',
         industry: '',
-        application: '',
-        attendees: '',
-        preferredDate: '',
-        requirements: ''
+        message: ''
       })
       
-      setTimeout(() => setDemoSuccess(false), 5000)
+      setTimeout(() => setFormSuccess(false), 5000)
     } catch (error) {
-      setDemoError(error.message || 'Failed to submit form. Please try again or email us directly.')
+      setFormError(error.message || 'Failed to submit form. Please try again or email us directly.')
       console.error('Form submission error:', error)
     } finally {
-      setDemoLoading(false)
-    }
-  }
-
-  const handleSalesSubmit = async (e) => {
-    e.preventDefault()
-    setSalesLoading(true)
-    setSalesError('')
-    setSalesSuccess(false)
-    
-    // Client-side validation
-    if (!salesForm.companyName || !salesForm.contactPerson || !salesForm.email) {
-      setSalesError('Please fill in all required fields: Company Name, Contact Person, and Email.')
-      setSalesLoading(false)
-      return
-    }
-    
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(salesForm.email)) {
-      setSalesError('Please enter a valid email address.')
-      setSalesLoading(false)
-      return
-    }
-    
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...salesForm,
-          formType: 'sales',
-          timestamp: new Date().toISOString()
-        })
-      })
-      
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to submit form')
-      }
-      
-      setSalesSuccess(true)
-      
-      // Track successful form submission
-      if (window.trackLead) {
-        window.trackLead('sales');
-      }
-      
-      setSalesForm({
-        companyName: '',
-        contactPerson: '',
-        email: '',
-        phone: '',
-        industry: '',
-        currentChallenges: '',
-        budget: '',
-        timeline: '',
-        technicalRequirements: '',
-        supportNeeds: ''
-      })
-      
-      setTimeout(() => setSalesSuccess(false), 5000)
-    } catch (error) {
-      setSalesError(error.message || 'Failed to submit form. Please try again or email us directly.')
-      console.error('Form submission error:', error)
-    } finally {
-      setSalesLoading(false)
+      setFormLoading(false)
     }
   }
 
   const contactInfo = [
     {
-      icon: MapPin,
-      title: 'Headquarters',
-      details: [
-        'CHIRAL Robotics Solutions Ltd.',
-        'Technology Park, Tel Aviv, Israel',
-        'Building 15, Floor 3'
-      ]
-    },
-    {
       icon: Phone,
       title: 'Phone',
       details: [
-        'Main: +972-3-XXX-XXXX',
         'Sales: +972-3-XXX-XXXX',
-        'Support: +972-3-XXX-XXXX',
-        'Emergency: +972-5X-XXX-XXXX (24/7)'
+        'Support: +972-3-XXX-XXXX'
       ]
     },
     {
@@ -200,26 +131,14 @@ const Contact = () => {
       title: 'Email',
       details: [
         'info@chiral-robotics.co.il',
-        'sales@chiral-robotics.co.il',
-        'support@chiral-robotics.co.il',
-        'partnerships@chiral-robotics.co.il'
-      ]
-    },
-    {
-      icon: Clock,
-      title: 'Business Hours',
-      details: [
-        'Sunday - Thursday: 8:00 AM - 6:00 PM',
-        'Friday: 8:00 AM - 2:00 PM',
-        'Saturday: Closed',
-        'Emergency Support: 24/7'
+        'sales@chiral-robotics.co.il'
       ]
     }
   ]
 
   const industries = [
     'Power & Utilities',
-    'Manufacturing',
+    'Manufacturing', 
     'Chemical Processing',
     'Oil & Gas',
     'Mining',
@@ -228,50 +147,27 @@ const Contact = () => {
     'Other'
   ]
 
-  const applications = [
-    'Equipment Inspection',
-    'Security Patrol',
-    'Environmental Monitoring',
-    'Emergency Response',
-    'Research & Development',
-    'Training & Education',
-    'Other'
-  ]
-
-  const budgetRanges = [
-    'Under $100K',
-    '$100K - $250K',
-    '$250K - $500K',
-    '$500K - $1M',
-    'Over $1M',
-    'To be discussed'
-  ]
-
-  const timelines = [
-    'Immediate (1-3 months)',
-    'Short-term (3-6 months)',
-    'Medium-term (6-12 months)',
-    'Long-term (12+ months)',
-    'Planning phase'
-  ]
-
   return (
     <div className="min-h-screen py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center space-y-6 mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-            {t('contact.title')}
+            {formType === 'quote' ? 'Get Your Custom Quote' : 
+             formType === 'demo' ? 'Schedule a Product Demo' : 
+             'Get Information About Our Robotic Solutions'}
           </h1>
-          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            {t('contact.subtitle')}
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            {formType === 'quote' ? 'Tell us about your requirements and get a detailed quote within 24 hours.' :
+             formType === 'demo' ? 'See our robots in action with a personalized demonstration.' :
+             'Contact us to learn more about how CHIRAL\'s advanced quadruped robots can transform your operations.'}
           </p>
         </div>
 
         {/* Contact Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {contactInfo.map((info, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
+            <Card key={index} className="text-center">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-lg w-fit">
                   <info.icon className="h-6 w-6 text-primary" />
@@ -291,420 +187,117 @@ const Contact = () => {
           ))}
         </div>
 
-        {/* Contact Forms */}
-        <Tabs defaultValue="demo" className="mb-20">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="demo" className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4" />
-              <span>{t('contact.demoTitle')}</span>
-            </TabsTrigger>
-            <TabsTrigger value="sales" className="flex items-center space-x-2">
-              <MessageSquare className="h-4 w-4" />
-              <span>{t('contact.salesTitle')}</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="demo" className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">{t('contact.demoTitle')}</CardTitle>
-                <CardDescription className="text-base">
-                  {t('contact.demoDescription')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {demoSuccess && (
-                  <Alert className="mb-6 border-green-500 bg-green-50">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
-                      Demo request submitted successfully! We'll contact you within 24 hours.
-                    </AlertDescription>
-                  </Alert>
-                )}
-                {demoError && (
-                  <Alert className="mb-6 border-red-500 bg-red-50">
-                    <AlertCircle className="h-4 w-4 text-red-600" />
-                    <AlertDescription className="text-red-800">
-                      {demoError}
-                    </AlertDescription>
-                  </Alert>
-                )}
-                <form onSubmit={handleDemoSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-company">{t('contact.companyName')} *</Label>
-                      <Input
-                        id="demo-company"
-                        value={demoForm.companyName}
-                        onChange={(e) => setDemoForm({...demoForm, companyName: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-contact">{t('contact.contactPerson')} *</Label>
-                      <Input
-                        id="demo-contact"
-                        value={demoForm.contactPerson}
-                        onChange={(e) => setDemoForm({...demoForm, contactPerson: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-email">{t('contact.email')} *</Label>
-                      <Input
-                        id="demo-email"
-                        type="email"
-                        value={demoForm.email}
-                        onChange={(e) => setDemoForm({...demoForm, email: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-phone">{t('contact.phone')} *</Label>
-                      <Input
-                        id="demo-phone"
-                        type="tel"
-                        value={demoForm.phone}
-                        onChange={(e) => setDemoForm({...demoForm, phone: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-industry">{t('contact.industry')} *</Label>
-                      <Select value={demoForm.industry} onValueChange={(value) => setDemoForm({...demoForm, industry: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your industry" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {industries.map((industry) => (
-                            <SelectItem key={industry} value={industry}>
-                              {industry}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-application">Application Interest</Label>
-                      <Select value={demoForm.application} onValueChange={(value) => setDemoForm({...demoForm, application: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select application" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {applications.map((application) => (
-                            <SelectItem key={application} value={application}>
-                              {application}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-attendees">Number of Attendees</Label>
-                      <Input
-                        id="demo-attendees"
-                        type="number"
-                        min="1"
-                        max="20"
-                        value={demoForm.attendees}
-                        onChange={(e) => setDemoForm({...demoForm, attendees: e.target.value})}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="demo-date">Preferred Date</Label>
-                      <Input
-                        id="demo-date"
-                        type="date"
-                        value={demoForm.preferredDate}
-                        onChange={(e) => setDemoForm({...demoForm, preferredDate: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="demo-requirements">Special Requirements or Questions</Label>
-                    <Textarea
-                      id="demo-requirements"
-                      rows={4}
-                      value={demoForm.requirements}
-                      onChange={(e) => setDemoForm({...demoForm, requirements: e.target.value})}
-                      placeholder="Please describe any specific requirements, questions, or areas of interest for the demonstration..."
-                    />
-                  </div>
-
-                  <Button type="submit" size="lg" className="w-full" disabled={demoLoading}>
-                    {demoLoading ? (
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    ) : (
-                      <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                    )}
-                    {demoLoading ? 'Submitting...' : t('contact.submit')}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="sales" className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">{t('contact.salesTitle')}</CardTitle>
-                <CardDescription className="text-base">
-                  {t('contact.salesDescription')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {salesSuccess && (
-                  <Alert className="mb-6 border-green-500 bg-green-50">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
-                      Sales inquiry submitted successfully! Our team will respond within 24 hours.
-                    </AlertDescription>
-                  </Alert>
-                )}
-                {salesError && (
-                  <Alert className="mb-6 border-red-500 bg-red-50">
-                    <AlertCircle className="h-4 w-4 text-red-600" />
-                    <AlertDescription className="text-red-800">
-                      {salesError}
-                    </AlertDescription>
-                  </Alert>
-                )}
-                <form onSubmit={handleSalesSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-company">{t('contact.companyName')} *</Label>
-                      <Input
-                        id="sales-company"
-                        value={salesForm.companyName}
-                        onChange={(e) => setSalesForm({...salesForm, companyName: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-contact">{t('contact.contactPerson')} *</Label>
-                      <Input
-                        id="sales-contact"
-                        value={salesForm.contactPerson}
-                        onChange={(e) => setSalesForm({...salesForm, contactPerson: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-email">{t('contact.email')} *</Label>
-                      <Input
-                        id="sales-email"
-                        type="email"
-                        value={salesForm.email}
-                        onChange={(e) => setSalesForm({...salesForm, email: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-phone">{t('contact.phone')} *</Label>
-                      <Input
-                        id="sales-phone"
-                        type="tel"
-                        value={salesForm.phone}
-                        onChange={(e) => setSalesForm({...salesForm, phone: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-industry">{t('contact.industry')} *</Label>
-                    <Select value={salesForm.industry} onValueChange={(value) => setSalesForm({...salesForm, industry: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your industry" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {industries.map((industry) => (
-                          <SelectItem key={industry} value={industry}>
-                            {industry}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-challenges">Current Challenges or Needs *</Label>
-                    <Textarea
-                      id="sales-challenges"
-                      rows={3}
-                      value={salesForm.currentChallenges}
-                      onChange={(e) => setSalesForm({...salesForm, currentChallenges: e.target.value})}
-                      placeholder="Please describe your current operational challenges or specific needs..."
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-budget">Budget Considerations</Label>
-                      <Select value={salesForm.budget} onValueChange={(value) => setSalesForm({...salesForm, budget: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select budget range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {budgetRanges.map((range) => (
-                            <SelectItem key={range} value={range}>
-                              {range}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sales-timeline">Implementation Timeline</Label>
-                      <Select value={salesForm.timeline} onValueChange={(value) => setSalesForm({...salesForm, timeline: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select timeline" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {timelines.map((timeline) => (
-                            <SelectItem key={timeline} value={timeline}>
-                              {timeline}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-technical">Technical Requirements</Label>
-                    <Textarea
-                      id="sales-technical"
-                      rows={3}
-                      value={salesForm.technicalRequirements}
-                      onChange={(e) => setSalesForm({...salesForm, technicalRequirements: e.target.value})}
-                      placeholder="Please describe any specific technical requirements or environmental conditions..."
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sales-support">Support Needs</Label>
-                    <Textarea
-                      id="sales-support"
-                      rows={3}
-                      value={salesForm.supportNeeds}
-                      onChange={(e) => setSalesForm({...salesForm, supportNeeds: e.target.value})}
-                      placeholder="Please describe your expected support requirements (training, maintenance, etc.)..."
-                    />
-                  </div>
-
-                  <Button type="submit" size="lg" className="w-full" disabled={salesLoading}>
-                    {salesLoading ? (
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    ) : (
-                      <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                    )}
-                    {salesLoading ? 'Submitting...' : t('contact.submit')}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        {/* Support Channels */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-            {t('contact.supportTitle')}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-blue-500/10 rounded-lg w-fit">
-                  <Phone className="h-8 w-8 text-blue-500" />
+        {/* Contact Form */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Send Us Your Information Request</CardTitle>
+            <CardDescription className="text-base">
+              Fill out this form and our team will get back to you within 24 hours with detailed information about our robotic solutions.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {formSuccess && (
+              <Alert className="mb-6 border-green-500 bg-green-50">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800">
+                  Request submitted successfully! We'll contact you within 24 hours.
+                </AlertDescription>
+              </Alert>
+            )}
+            {formError && (
+              <Alert className="mb-6 border-red-500 bg-red-50">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription className="text-red-800">
+                  {formError}
+                </AlertDescription>
+              </Alert>
+            )}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="company">Company Name *</Label>
+                  <Input
+                    id="company"
+                    value={formData.companyName}
+                    onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                    required
+                  />
                 </div>
-                <CardTitle>Phone Support</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Direct access to technical specialists for immediate assistance with urgent issues.
-                </p>
-                <Button variant="outline" className="w-full">
-                  Call Support
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-green-500/10 rounded-lg w-fit">
-                  <Mail className="h-8 w-8 text-green-500" />
+                <div className="space-y-2">
+                  <Label htmlFor="contact">Contact Person *</Label>
+                  <Input
+                    id="contact"
+                    value={formData.contactPerson}
+                    onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                    required
+                  />
                 </div>
-                <CardTitle>Email Support</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Comprehensive technical documentation and support request submission.
-                </p>
-                <Button variant="outline" className="w-full">
-                  Email Support
-                </Button>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="text-center hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="mx-auto mb-4 p-3 bg-purple-500/10 rounded-lg w-fit">
-                  <Download className="h-8 w-8 text-purple-500" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
+                  />
                 </div>
-                <CardTitle>Resources</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Access technical documentation, user manuals, and training materials.
-                </p>
-                <Button variant="outline" className="w-full">
-                  Download Resources
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  />
+                </div>
+              </div>
 
-        {/* Map Section */}
-        <div className="bg-muted/50 rounded-2xl p-12 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Visit Our Facilities
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Located in the heart of Tel Aviv's Technology Park, our facilities include demonstration centers, 
-            training facilities, and comprehensive technical support capabilities.
-          </p>
-          <div className="bg-muted rounded-lg h-64 flex items-center justify-center mb-6">
-            <div className="text-center">
-              <MapPin className="h-12 w-12 text-primary mx-auto mb-4" />
-              <p className="text-lg font-semibold">Interactive Map</p>
-              <p className="text-muted-foreground">Technology Park, Tel Aviv, Israel</p>
-            </div>
-          </div>
-          <Button size="lg">
-            Get Directions
-          </Button>
-        </div>
+              <div className="space-y-2">
+                <Label htmlFor="industry">Industry</Label>
+                <Select value={formData.industry} onValueChange={(value) => setFormData({...formData, industry: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {industries.map((industry) => (
+                      <SelectItem key={industry} value={industry}>
+                        {industry}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message">Tell us about your needs *</Label>
+                <Textarea
+                  id="message"
+                  rows={5}
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  placeholder="Please describe your project requirements, challenges, or questions about our robotic solutions..."
+                  required
+                />
+              </div>
+
+              <Button type="submit" size="lg" className="w-full" disabled={formLoading}>
+                {formLoading ? (
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5 mr-2" />
+                )}
+                {formLoading ? 'Submitting...' : 'Send Information Request'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
 }
 
 export default Contact
-

@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, Linkedin, Twitter, Send, Loader2, CheckCircle } from 'lucide-react'
+import { Mail, Phone, Send, Loader2, CheckCircle } from 'lucide-react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { useLanguage } from '../contexts/LanguageContext'
 
 const Footer = () => {
-  const { t, isRTL } = useLanguage()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -70,21 +68,13 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center">
               <div className="text-xl font-bold text-primary">CHIRAL</div>
-              <div className={`ml-2 text-sm text-muted-foreground ${isRTL ? 'mr-2 ml-0' : ''}`}>
+              <div className="ml-2 text-sm text-muted-foreground">
                 Robotics
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              {t('home.trustDescription')}
+              CHIRAL has established itself as Israel's premier provider of industrial quadruped robotics solutions.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -93,22 +83,22 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/products" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.products')}
+                  Products
                 </Link>
               </li>
               <li>
                 <Link to="/applications" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.applications')}
+                  Applications
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.about')}
+                  About
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary">
-                  {t('nav.contact')}
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -136,7 +126,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Newsletter Signup */}
+          {/* Contact & Newsletter */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-foreground">Stay Updated</h3>
             <p className="text-sm text-muted-foreground">
@@ -204,9 +194,6 @@ const Footer = () => {
               <a href="#" className="text-sm text-muted-foreground hover:text-primary">
                 Terms of Service
               </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary">
-                Cookie Policy
-              </a>
             </div>
           </div>
         </div>
@@ -216,4 +203,3 @@ const Footer = () => {
 }
 
 export default Footer
-

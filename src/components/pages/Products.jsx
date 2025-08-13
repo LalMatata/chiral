@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, CheckCircle, Star } from 'lucide-react'
-import { useLanguage } from '../../contexts/LanguageContext'
 
 // Import images
 import x30Hero from '../../assets/images/products/x30-hero.png'
@@ -15,7 +14,6 @@ import lite3Main from '../../assets/images/products/lite3-main.png'
 import lite3Detailed from '../../assets/images/products/lite3-detailed.jpg'
 
 const Products = () => {
-  const { t, isRTL } = useLanguage()
 
   const products = [
     {
@@ -152,10 +150,10 @@ const Products = () => {
         {/* Header */}
         <div className="text-center space-y-6 mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-            {t('products.title')}
+            Choose the Right Robotic Solution for Your Needs
           </h1>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            {t('products.subtitle')}
+            CHIRAL offers three distinct product lines, each engineered to address specific operational requirements and budget considerations.
           </p>
         </div>
 
@@ -214,12 +212,12 @@ const Products = () => {
                   <div className="space-y-2">
                     <Button className="w-full" asChild>
                       <Link to={`/products/${product.id}`}>
-                        {t('products.learnMore')}
-                        <ArrowRight className={`h-4 w-4 ${isRTL ? 'mr-2 ml-0' : 'ml-2'}`} />
+                        Learn More
+                        <ArrowRight className="h-4 w-4 ml-2" />
                       </Link>
                     </Button>
                     <Button variant="outline" className="w-full" asChild>
-                      <Link to="/contact">{t('nav.requestDemo')}</Link>
+                      <Link to="/contact">Get Information</Link>
                     </Button>
                   </div>
                 </div>
@@ -231,7 +229,7 @@ const Products = () => {
         {/* Comparison Table */}
         <div className="mb-20">
           <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-            {t('products.compareTitle')}
+            Product Comparison
           </h2>
           
           <div className="overflow-x-auto">
@@ -269,8 +267,8 @@ const Products = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
               <Link to="/contact">
-                {t('nav.requestDemo')}
-                <ArrowRight className={`h-5 w-5 ${isRTL ? 'mr-2 ml-0' : 'ml-2'}`} />
+                Get Information
+                <ArrowRight className="h-5 w-5 ml-2" />
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>

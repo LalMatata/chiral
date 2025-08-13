@@ -1,20 +1,18 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Menu, X, Globe } from 'lucide-react'
-import { useLanguage } from '../contexts/LanguageContext'
+import { Menu, X } from 'lucide-react'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { language, toggleLanguage, t, isRTL } = useLanguage()
   const location = useLocation()
 
   const navigation = [
-    { name: t('nav.home'), href: '/' },
-    { name: t('nav.products'), href: '/products' },
-    { name: t('nav.applications'), href: '/applications' },
-    { name: t('nav.about'), href: '/about' },
-    { name: t('nav.contact'), href: '/contact' }
+    { name: 'Home', href: '/' },
+    { name: 'Products', href: '/products' },
+    { name: 'Applications', href: '/applications' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' }
   ]
 
   const isActive = (href) => {
@@ -34,7 +32,7 @@ const Header = () => {
               <div className="text-2xl font-bold text-primary">
                 CHIRAL
               </div>
-              <div className={`ml-2 text-sm text-muted-foreground ${isRTL ? 'mr-2 ml-0' : ''}`}>
+              <div className="ml-2 text-sm text-muted-foreground">
                 Robotics
               </div>
             </Link>
@@ -59,38 +57,17 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Language Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              className="flex items-center space-x-1"
-            >
-              <Globe className="h-4 w-4" />
-              <span className="text-sm font-medium">
-                {language === 'en' ? 'עברית' : 'English'}
-              </span>
-            </Button>
-
             {/* CTA Buttons */}
             <Button variant="outline" size="sm" asChild>
-              <Link to="/contact">{t('nav.requestDemo')}</Link>
+              <Link to="/contact">Request Demo</Link>
             </Button>
             <Button size="sm" asChild>
-              <Link to="/contact">{t('nav.downloadBrochure')}</Link>
+              <Link to="/contact">Get Information</Link>
             </Button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              className="flex items-center"
-            >
-              <Globe className="h-4 w-4" />
-            </Button>
+          <div className="md:hidden">
             <Button
               variant="ghost"
               size="sm"
@@ -126,12 +103,12 @@ const Header = () => {
               <div className="pt-4 space-y-2">
                 <Button variant="outline" size="sm" className="w-full" asChild>
                   <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                    {t('nav.requestDemo')}
+                    Request Demo
                   </Link>
                 </Button>
                 <Button size="sm" className="w-full" asChild>
                   <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                    {t('nav.downloadBrochure')}
+                    Get Information
                   </Link>
                 </Button>
               </div>
