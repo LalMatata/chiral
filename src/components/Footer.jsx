@@ -1,10 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, Linkedin, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Linkedin, Twitter, Send, Loader2, CheckCircle } from 'lucide-react'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const Footer = () => {
   const { t, isRTL } = useLanguage()
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess(false)
+    
+    // Client-side validation
+    if (!email) {
+      setError('Please enter your email address.')
+      setLoading(false)
+      return
+    }
+    
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.')
+      setLoading(false)
+      return
+    }
+    
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to subscribe')
+      }
+      
+      setSuccess(true)
+      
+      // Track successful newsletter signup
+      if (window.trackNewsletter) {
+        window.trackNewsletter();
+      }
+      
+      setEmail('')
+      setTimeout(() => setSuccess(false), 3000)
+    } catch (error) {
+      setError(error.message || 'Failed to subscribe. Please try again.')
+      console.error('Newsletter subscription error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <footer className="bg-muted/50 border-t">
@@ -80,20 +136,56 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Newsletter Signup */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Contact</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>Technology Park, Tel Aviv, Israel</span>
+            <h3 className="text-sm font-semibold text-foreground">Stay Updated</h3>
+            <p className="text-sm text-muted-foreground">
+              Get the latest updates on robotics technology and industry insights.
+            </p>
+            
+            {success && (
+              <div className="flex items-center space-x-2 text-sm text-green-600">
+                <CheckCircle className="h-4 w-4" />
+                <span>Successfully subscribed!</span>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
+            )}
+            
+            {error && (
+              <p className="text-sm text-red-600">{error}</p>
+            )}
+            
+            <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+                className="text-sm"
+              />
+              <Button 
+                type="submit" 
+                size="sm" 
+                className="w-full"
+                disabled={loading || !email}
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4 mr-2" />
+                )}
+                {loading ? 'Subscribing...' : 'Subscribe'}
+              </Button>
+            </form>
+            
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex items-center space-x-2">
+                <Phone className="h-3 w-3" />
                 <span>+972-3-XXX-XXXX</span>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
+              <div className="flex items-center space-x-2">
+                <Mail className="h-3 w-3" />
                 <span>info@chiral-robotics.co.il</span>
               </div>
             </div>

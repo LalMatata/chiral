@@ -6,11 +6,19 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, Calendar, Download } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Mail, Phone, MapPin, Clock, Send, MessageSquare, Calendar, Download, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 
 const Contact = () => {
   const { t, isRTL } = useLanguage()
+  const [demoLoading, setDemoLoading] = useState(false)
+  const [salesLoading, setSalesLoading] = useState(false)
+  const [demoSuccess, setDemoSuccess] = useState(false)
+  const [salesSuccess, setSalesSuccess] = useState(false)
+  const [demoError, setDemoError] = useState('')
+  const [salesError, setSalesError] = useState('')
+  
   const [demoForm, setDemoForm] = useState({
     companyName: '',
     contactPerson: '',
@@ -36,18 +44,135 @@ const Contact = () => {
     supportNeeds: ''
   })
 
-  const handleDemoSubmit = (e) => {
+  const handleDemoSubmit = async (e) => {
     e.preventDefault()
-    // Handle demo form submission
-    console.log('Demo form submitted:', demoForm)
-    alert('Demo request submitted successfully! We will contact you within 24 hours.')
+    setDemoLoading(true)
+    setDemoError('')
+    setDemoSuccess(false)
+    
+    // Client-side validation
+    if (!demoForm.companyName || !demoForm.contactPerson || !demoForm.email) {
+      setDemoError('Please fill in all required fields: Company Name, Contact Person, and Email.')
+      setDemoLoading(false)
+      return
+    }
+    
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(demoForm.email)) {
+      setDemoError('Please enter a valid email address.')
+      setDemoLoading(false)
+      return
+    }
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...demoForm,
+          formType: 'demo',
+          timestamp: new Date().toISOString()
+        })
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to submit form')
+      }
+      
+      setDemoSuccess(true)
+      
+      // Track successful form submission
+      if (window.trackLead) {
+        window.trackLead('demo');
+      }
+      
+      setDemoForm({
+        companyName: '',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        industry: '',
+        application: '',
+        attendees: '',
+        preferredDate: '',
+        requirements: ''
+      })
+      
+      setTimeout(() => setDemoSuccess(false), 5000)
+    } catch (error) {
+      setDemoError(error.message || 'Failed to submit form. Please try again or email us directly.')
+      console.error('Form submission error:', error)
+    } finally {
+      setDemoLoading(false)
+    }
   }
 
-  const handleSalesSubmit = (e) => {
+  const handleSalesSubmit = async (e) => {
     e.preventDefault()
-    // Handle sales form submission
-    console.log('Sales form submitted:', salesForm)
-    alert('Sales inquiry submitted successfully! Our team will respond within 24 hours.')
+    setSalesLoading(true)
+    setSalesError('')
+    setSalesSuccess(false)
+    
+    // Client-side validation
+    if (!salesForm.companyName || !salesForm.contactPerson || !salesForm.email) {
+      setSalesError('Please fill in all required fields: Company Name, Contact Person, and Email.')
+      setSalesLoading(false)
+      return
+    }
+    
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(salesForm.email)) {
+      setSalesError('Please enter a valid email address.')
+      setSalesLoading(false)
+      return
+    }
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...salesForm,
+          formType: 'sales',
+          timestamp: new Date().toISOString()
+        })
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to submit form')
+      }
+      
+      setSalesSuccess(true)
+      
+      // Track successful form submission
+      if (window.trackLead) {
+        window.trackLead('sales');
+      }
+      
+      setSalesForm({
+        companyName: '',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        industry: '',
+        currentChallenges: '',
+        budget: '',
+        timeline: '',
+        technicalRequirements: '',
+        supportNeeds: ''
+      })
+      
+      setTimeout(() => setSalesSuccess(false), 5000)
+    } catch (error) {
+      setSalesError(error.message || 'Failed to submit form. Please try again or email us directly.')
+      console.error('Form submission error:', error)
+    } finally {
+      setSalesLoading(false)
+    }
   }
 
   const contactInfo = [
@@ -188,6 +313,22 @@ const Contact = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                {demoSuccess && (
+                  <Alert className="mb-6 border-green-500 bg-green-50">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      Demo request submitted successfully! We'll contact you within 24 hours.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {demoError && (
+                  <Alert className="mb-6 border-red-500 bg-red-50">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <AlertDescription className="text-red-800">
+                      {demoError}
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <form onSubmit={handleDemoSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
@@ -300,9 +441,13 @@ const Contact = () => {
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full">
-                    <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                    {t('contact.submit')}
+                  <Button type="submit" size="lg" className="w-full" disabled={demoLoading}>
+                    {demoLoading ? (
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    ) : (
+                      <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
+                    )}
+                    {demoLoading ? 'Submitting...' : t('contact.submit')}
                   </Button>
                 </form>
               </CardContent>
@@ -318,6 +463,22 @@ const Contact = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                {salesSuccess && (
+                  <Alert className="mb-6 border-green-500 bg-green-50">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      Sales inquiry submitted successfully! Our team will respond within 24 hours.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {salesError && (
+                  <Alert className="mb-6 border-red-500 bg-red-50">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <AlertDescription className="text-red-800">
+                      {salesError}
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <form onSubmit={handleSalesSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
@@ -446,9 +607,13 @@ const Contact = () => {
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full">
-                    <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                    {t('contact.submit')}
+                  <Button type="submit" size="lg" className="w-full" disabled={salesLoading}>
+                    {salesLoading ? (
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    ) : (
+                      <Send className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
+                    )}
+                    {salesLoading ? 'Submitting...' : t('contact.submit')}
                   </Button>
                 </form>
               </CardContent>
