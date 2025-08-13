@@ -5,6 +5,31 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CHIRAL - Advanced Quadruped Robotics for Israeli Industry</title>
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+      
+      // Custom event tracking for lead capture
+      window.trackLead = function(formType) {
+        gtag('event', 'form_submit', {
+          form_type: formType,
+          event_category: 'Lead Generation',
+          event_label: formType
+        });
+      };
+      
+      window.trackNewsletter = function() {
+        gtag('event', 'newsletter_signup', {
+          event_category: 'Engagement',
+          event_label: 'Newsletter'
+        });
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

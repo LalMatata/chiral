@@ -105,3 +105,17 @@ temp/
 *.sln
 *.sw?
 
+
+# Environment variables
+.env
+.env.local
+
+# Data files
+data/
+
+# Test files
+*.test.html
+*.test.js
+validation-test-results.sh
+frontend-validation-*.js
+frontend-validation-*.html
