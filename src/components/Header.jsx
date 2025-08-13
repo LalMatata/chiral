@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Globe } from 'lucide-react'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const { t, language, toggleLanguage, isRTL } = useLanguage()
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Products', href: '/products' },
-    { name: 'Contact', href: '/contact' }
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.products'), href: '/products' },
+    { name: t('nav.applications'), href: '/applications' },
+    { name: t('nav.about'), href: '/about' },
+    { name: t('nav.contact'), href: '/contact' }
   ]
 
   const isActive = (path) => {
@@ -19,7 +23,7 @@ const Header = () => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className={`flex justify-between items-center h-16 ${isRTL ? 'flex-row-reverse' : ''}`}>
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
@@ -31,10 +35,10 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className={`hidden md:flex space-x-8 ${isRTL ? 'space-x-reverse' : ''}`}>
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={item.href}
                 to={item.href}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.href)
@@ -47,13 +51,21 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Language Toggle & CTA Button */}
+          <div className={`hidden md:flex items-center space-x-4 ${isRTL ? 'space-x-reverse' : ''}`}>
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+              title={language === 'en' ? 'Switch to Hebrew' : 'Switch to English'}
+            >
+              <Globe size={16} />
+              <span>{language === 'en' ? 'עברית' : 'English'}</span>
+            </button>
             <Link
               to="/contact"
               className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
             >
-              Get Quote
+              {t('nav.requestDemo')}
             </Link>
           </div>
 
@@ -74,7 +86,7 @@ const Header = () => {
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
               {navigation.map((item) => (
                 <Link
-                  key={item.name}
+                  key={item.href}
                   to={item.href}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     isActive(item.href)
@@ -86,12 +98,22 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
+              <button
+                onClick={() => {
+                  toggleLanguage()
+                  setIsMenuOpen(false)
+                }}
+                className="flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+              >
+                <Globe size={16} />
+                <span>{language === 'en' ? 'עברית' : 'English'}</span>
+              </button>
               <Link
                 to="/contact"
                 className="block w-full text-center bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700 transition-colors mt-4"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Get Quote
+                {t('nav.requestDemo')}
               </Link>
             </div>
           </div>
