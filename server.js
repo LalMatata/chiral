@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
 
 dotenv.config();
 
@@ -133,11 +135,59 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
 
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
+// Ensure brochures directory exists
+const brochuresDir = path.join(uploadsDir, 'brochures');
+if (!fs.existsSync(brochuresDir)) {
+  fs.mkdirSync(brochuresDir);
+}
+
 // Initialize leads file if it doesn't exist
 const leadsFile = path.join(dataDir, 'leads.json');
 if (!fs.existsSync(leadsFile)) {
   fs.writeFileSync(leadsFile, '[]');
 }
+
+// Initialize brochures file if it doesn't exist
+const brochuresFile = path.join(dataDir, 'brochures.json');
+if (!fs.existsSync(brochuresFile)) {
+  fs.writeFileSync(brochuresFile, '[]');
+}
+
+// Multer configuration for brochure uploads
+const brochureStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, brochuresDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = uuidv4();
+    const extension = path.extname(file.originalname);
+    cb(null, `${uniqueSuffix}${extension}`);
+  }
+});
+
+const brochureUpload = multer({
+  storage: brochureStorage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only PDF, JPG, and PNG files are allowed.'), false);
+    }
+  }
+});
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(uploadsDir));
 
 // Contact form endpoint
 app.post('/api/contact', validateContactForm, async (req, res) => {
@@ -227,6 +277,7 @@ app.get('/api/leads', (req, res) => {
 app.get('/api/analytics/metrics', (req, res) => {
   try {
     const leads = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
+    const newsletterFile = path.join(dataDir, 'newsletter.json');
     const newsletters = JSON.parse(fs.readFileSync(newsletterFile, 'utf8') || '[]');
     
     // Calculate metrics
@@ -391,17 +442,120 @@ function formatAutoReply(formData) {
       </ul>
     `}
     
-    <p>If you have any urgent questions, please don't hesitate to call us at +972-3-XXX-XXXX.</p>
+    <p>If you have any urgent questions, please don't hesitate to contact us through our website or email.</p>
     
     <p>Best regards,<br>
     The CHIRAL Team</p>
     
     <hr>
     <p><small>CHIRAL Robotics Solutions Ltd.<br>
-    Technology Park, Tel Aviv, Israel<br>
+    Advanced Industrial Robotics<br>
     www.chiral-robotics.com</small></p>
   `;
 }
+
+// Brochure API endpoints
+
+// Get all brochures
+app.get('/api/brochures', (req, res) => {
+  try {
+    const brochures = JSON.parse(fs.readFileSync(brochuresFile, 'utf8') || '[]');
+    res.json(brochures);
+  } catch (err) {
+    console.error('Error retrieving brochures:', err);
+    res.status(500).json({ error: 'Failed to retrieve brochures' });
+  }
+});
+
+// Upload new brochure
+app.post('/api/brochures', brochureUpload.single('brochure'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const { title, description, category } = req.body;
+    
+    if (!title || !category) {
+      // Clean up uploaded file
+      fs.unlinkSync(req.file.path);
+      return res.status(400).json({ error: 'Title and category are required' });
+    }
+
+    const brochures = JSON.parse(fs.readFileSync(brochuresFile, 'utf8') || '[]');
+    
+    const newBrochure = {
+      id: uuidv4(),
+      title,
+      description: description || '',
+      category,
+      originalName: req.file.originalname,
+      filename: req.file.filename,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      downloadUrl: `/uploads/brochures/${req.file.filename}`,
+      uploadedAt: new Date().toISOString()
+    };
+
+    brochures.push(newBrochure);
+    fs.writeFileSync(brochuresFile, JSON.stringify(brochures, null, 2));
+
+    res.json({ success: true, brochure: newBrochure });
+  } catch (err) {
+    console.error('Error uploading brochure:', err);
+    
+    // Clean up uploaded file if it exists
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    
+    res.status(500).json({ error: 'Failed to upload brochure' });
+  }
+});
+
+// Delete brochure
+app.delete('/api/brochures/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const brochures = JSON.parse(fs.readFileSync(brochuresFile, 'utf8') || '[]');
+    
+    const brochureIndex = brochures.findIndex(b => b.id === id);
+    if (brochureIndex === -1) {
+      return res.status(404).json({ error: 'Brochure not found' });
+    }
+
+    const brochure = brochures[brochureIndex];
+    
+    // Delete file from disk
+    const filePath = path.join(brochuresDir, brochure.filename);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    // Remove from brochures array
+    brochures.splice(brochureIndex, 1);
+    fs.writeFileSync(brochuresFile, JSON.stringify(brochures, null, 2));
+
+    res.json({ success: true, message: 'Brochure deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting brochure:', err);
+    res.status(500).json({ error: 'Failed to delete brochure' });
+  }
+});
+
+// Get brochures by category
+app.get('/api/brochures/category/:category', (req, res) => {
+  try {
+    const { category } = req.params;
+    const brochures = JSON.parse(fs.readFileSync(brochuresFile, 'utf8') || '[]');
+    
+    const categoryBrochures = brochures.filter(b => b.category === category);
+    res.json(categoryBrochures);
+  } catch (err) {
+    console.error('Error retrieving brochures by category:', err);
+    res.status(500).json({ error: 'Failed to retrieve brochures' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

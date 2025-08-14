@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ArrowRight, CheckCircle, Star } from 'lucide-react'
+import BrochureDisplay from '../BrochureDisplay'
 
 // Import images
 import x30Hero from '../../assets/images/products/x30-hero.png'
@@ -306,56 +307,61 @@ const ProductDetail = () => {
           </TabsContent>
 
           <TabsContent value="support" className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Technical Support</CardTitle>
-                  <CardDescription>
-                    Comprehensive technical assistance for optimal system performance
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">24/7 emergency support</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">On-site maintenance services</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">Remote diagnostics</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
+            <div className="space-y-8">
+              {/* Download Resources */}
+              <BrochureDisplay category={model} />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Technical Support</CardTitle>
+                    <CardDescription>
+                      Comprehensive technical assistance for optimal system performance
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <span className="text-sm">24/7 emergency support</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <span className="text-sm">On-site maintenance services</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Remote diagnostics</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Training & Education</CardTitle>
-                  <CardDescription>
-                    Comprehensive training programs for your team
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">Operator training programs</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">Maintenance certification</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">Safety protocols training</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Training & Education</CardTitle>
+                    <CardDescription>
+                      Comprehensive training programs for your team
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Operator training programs</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Maintenance certification</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Safety protocols training</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
         </Tabs>

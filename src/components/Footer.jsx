@@ -73,7 +73,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              CHIRAL has established itself as Israel's premier provider of industrial quadruped robotics solutions.
+              CHIRAL has established itself as a leading global provider of advanced quadruped robotics solutions.
             </p>
           </div>
 
@@ -172,11 +172,11 @@ const Footer = () => {
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3" />
-                <span>+972-3-XXX-XXXX</span>
+                <span>+1-XXX-XXX-XXXX</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3" />
-                <span>info@chiral-robotics.co.il</span>
+                <span>info@chiral-robotics.com</span>
               </div>
             </div>
           </div>

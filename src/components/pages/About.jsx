@@ -50,10 +50,10 @@ const About = () => {
         {/* Header */}
         <div className="text-center space-y-6 mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-            CHIRAL - Pioneering Robotic Excellence in Israel
+            CHIRAL - Pioneering Global Robotic Excellence
           </h1>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Founded with a vision to bring the world's most advanced quadruped robotic technologies to Israeli industry.
+            Founded with a vision to bring the world's most advanced quadruped robotic technologies to global industry.
           </p>
         </div>
 
@@ -72,10 +72,10 @@ const About = () => {
               Our Mission
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              CHIRAL is dedicated to transforming Israeli industry through the introduction and support of advanced quadruped robotic technologies.
+              CHIRAL is dedicated to transforming global industry through the introduction and support of advanced quadruped robotic technologies.
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              We specialize in bringing world-class robotic solutions to Israel's most demanding industrial environments, from power utilities to security applications. Our focus is on delivering reliable, efficient, and safe robotic systems that enhance operational capabilities while reducing risk.
+              We specialize in bringing world-class robotic solutions to the world's most demanding industrial environments, from power utilities to security applications. Our focus is on delivering reliable, efficient, and safe robotic systems that enhance operational capabilities while reducing risk.
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@ const About = () => {
                 Expert Team Driving Robotic Innovation
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Our professionals combine deep technical knowledge with extensive industry experience. We understand the unique challenges facing Israeli enterprises and bring specialized expertise in robotics, automation, and industrial applications.
+                Our professionals combine deep technical knowledge with extensive industry experience. We understand the unique challenges facing global enterprises and bring specialized expertise in robotics, automation, and industrial applications.
               </p>
               <div className="grid grid-cols-2 gap-6">
                 {teamStats.map((stat, index) => (

@@ -122,16 +122,16 @@ const Contact = () => {
       icon: Phone,
       title: 'Phone',
       details: [
-        'Sales: +972-3-XXX-XXXX',
-        'Support: +972-3-XXX-XXXX'
+        'Sales: +1-XXX-XXX-XXXX',
+        'Support: +1-XXX-XXX-XXXX'
       ]
     },
     {
       icon: Mail,
       title: 'Email',
       details: [
-        'info@chiral-robotics.co.il',
-        'sales@chiral-robotics.co.il'
+        'info@chiral-robotics.com',
+        'sales@chiral-robotics.com'
       ]
     }
   ]

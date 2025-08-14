@@ -119,3 +119,4 @@ data/
 validation-test-results.sh
 frontend-validation-*.js
 frontend-validation-*.html
+.vercel

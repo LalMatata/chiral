@@ -17,8 +17,8 @@ const WhatsAppButton = () => {
     
     const message = pageMessages[currentPage] || 'Hi! I\'m interested in CHIRAL\'s robotic solutions.'
     const encodedMessage = encodeURIComponent(message)
-    const israeliPhoneNumber = '972123456789' // Replace with actual Israeli WhatsApp Business number
-    const whatsappUrl = `https://wa.me/${israeliPhoneNumber}?text=${encodedMessage}`
+    const businessPhoneNumber = '1234567890' // Replace with actual WhatsApp Business number
+    const whatsappUrl = `https://wa.me/${businessPhoneNumber}?text=${encodedMessage}`
     
     // Track WhatsApp click
     if (window.trackWhatsApp) {

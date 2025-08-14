@@ -52,11 +52,5 @@
       "destination": "/index.html"
     }
   ],
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10
-    }
-  },
-  "regions": ["iad1", "lhr1", "fra1"],
   "alias": ["dami.homes"]
 }

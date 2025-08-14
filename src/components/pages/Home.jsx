@@ -72,10 +72,10 @@ const Home = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                Revolutionizing Israeli Industry with Advanced Quadruped Robotics
+                Revolutionizing Industrial Operations with Advanced Quadruped Robotics
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                CHIRAL brings cutting-edge robotic solutions to Israel's most demanding industrial environments. From power utilities to security applications, our autonomous quadruped robots deliver unmatched performance, reliability, and intelligence.
+                CHIRAL delivers cutting-edge robotic solutions for the world's most demanding industrial environments. From power utilities to security applications, our autonomous quadruped robots provide unmatched performance, reliability, and intelligence.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" asChild>
@@ -111,7 +111,7 @@ const Home = () => {
               Why Choose CHIRAL for Your Industrial Robotics Needs?
             </h2>
             <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              In Israel's rapidly evolving industrial landscape, staying ahead requires embracing the most advanced technologies available. CHIRAL specializes in delivering state-of-the-art quadruped robotic solutions specifically tailored for Israeli enterprises across power utilities, manufacturing, security, and research sectors.
+              In today's rapidly evolving industrial landscape, staying ahead requires embracing the most advanced technologies available. CHIRAL specializes in delivering state-of-the-art quadruped robotic solutions specifically tailored for global enterprises across power utilities, manufacturing, security, and research sectors.
             </p>
           </div>
 
@@ -188,7 +188,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-6 mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground">
-              Transforming Israeli Industry Across Critical Sectors
+              Transforming Global Industry Across Critical Sectors
             </h2>
           </div>
 
@@ -214,10 +214,10 @@ const Home = () => {
       <section className="py-20 bg-primary/5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground">
-            Trusted by Leading Israeli Enterprises
+            Trusted by Leading Global Enterprises
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            CHIRAL has established itself as Israel's premier provider of industrial quadruped robotics solutions.
+            CHIRAL has established itself as a leading global provider of industrial quadruped robotics solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>

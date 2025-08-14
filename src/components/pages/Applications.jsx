@@ -19,7 +19,7 @@ const Applications = () => {
       image: industrialFacility,
       color: 'bg-yellow-500',
       details: {
-        overview: 'Israel\'s power infrastructure is critical to national security and economic prosperity. CHIRAL\'s robotic solutions transform power infrastructure management by providing automated, comprehensive, and safe inspection capabilities.',
+        overview: 'Modern power infrastructure is critical to national security and economic prosperity. CHIRAL\'s robotic solutions transform power infrastructure management by providing automated, comprehensive, and safe inspection capabilities.',
         useCases: [
           'Power plant equipment inspections',
           'Transmission line monitoring',
@@ -47,7 +47,7 @@ const Applications = () => {
       image: industrialFacility,
       color: 'bg-blue-500',
       details: {
-        overview: 'Israeli security requirements demand advanced solutions that can operate autonomously while providing comprehensive situational awareness. CHIRAL\'s robotic platforms offer unparalleled security capabilities.',
+        overview: 'Modern security requirements demand advanced solutions that can operate autonomously while providing comprehensive situational awareness. CHIRAL\'s robotic platforms offer unparalleled security capabilities.',
         useCases: [
           'Perimeter security patrols',
           'Critical infrastructure monitoring',
@@ -98,7 +98,7 @@ const Applications = () => {
     {
       id: 'research-development',
       title: 'Research & Development',
-      description: 'Enabling innovation in Israeli technology sector with advanced platforms.',
+      description: 'Enabling innovation in the global technology sector with advanced platforms.',
       icon: Microscope,
       image: industrialFacility,
       color: 'bg-purple-500',
@@ -131,10 +131,10 @@ const Applications = () => {
         {/* Header */}
         <div className="text-center space-y-6 mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-            Advancing Israeli Industry Through Robotic Innovation
+            Advancing Global Industry Through Robotic Innovation
           </h1>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Israeli enterprises need robotic systems that can operate reliably in demanding conditions while delivering exceptional performance.
+            Global enterprises need robotic systems that can operate reliably in demanding conditions while delivering exceptional performance.
           </p>
         </div>
 
