@@ -336,6 +336,35 @@ app.post('/api/newsletter', validateNewsletter, async (req, res) => {
   }
 });
 
+// Simple admin dashboard page
+app.get('/admin', (req, res) => {
+  res.send(`
+    <html>
+      <head><title>CHIRAL Admin Dashboard</title></head>
+      <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h1>CHIRAL Email Management System</h1>
+        <h2>Quick Actions</h2>
+        <p><a href="/api/process-emails">Process Email Queue</a> - Manually trigger email sending</p>
+        <p><a href="/api/leads">View All Leads (JSON)</a></p>
+        <p><a href="/api/analytics/metrics">Analytics Metrics</a></p>
+        <h2>Default Login</h2>
+        <p>Username: admin<br>Password: ChiralAdmin123!</p>
+      </body>
+    </html>
+  `);
+});
+
+// Manual email processing endpoint
+app.get('/api/process-emails', async (req, res) => {
+  try {
+    await emailQueue.processQueue();
+    res.json({ success: true, message: 'Email queue processed' });
+  } catch (error) {
+    console.error('Error processing email queue:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Get all leads (protected endpoint - add auth in production)
 app.get('/api/leads', (req, res) => {
   try {

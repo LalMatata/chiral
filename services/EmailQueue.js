@@ -39,11 +39,11 @@ class EmailQueue {
     const stmt = prepare(`
       SELECT * FROM email_queue 
       WHERE status = 'pending' 
-        AND attempts < @maxAttempts
+        AND attempts < 3
         AND (last_attempt IS NULL OR last_attempt <= datetime('now', '-5 minutes'))
       ORDER BY created_at ASC
     `);
-    return stmt.all({ maxAttempts: this.maxAttempts });
+    return stmt.all();
   }
 
   static updateStatus(id, status, error = null, sentAt = null) {
@@ -159,70 +159,113 @@ class EmailQueue {
 
   getWelcomeTemplate(data) {
     return `
-      <h2>Thank you for contacting CHIRAL Robotics</h2>
-      
-      <p>Dear ${data.contactPerson},</p>
-      
-      <p>We have received your ${data.inquiryType} and appreciate your interest in CHIRAL's advanced robotics solutions.</p>
-      
-      <p>Our team will review your requirements and contact you within 24 hours to discuss how we can help address your operational needs.</p>
-      
-      <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h3>Your Inquiry Details:</h3>
-        <ul>
-          <li><strong>Company:</strong> ${data.companyName}</li>
-          <li><strong>Industry:</strong> ${data.industry || 'Not specified'}</li>
-          <li><strong>Inquiry Type:</strong> ${data.inquiryType}</li>
-          ${data.budget ? `<li><strong>Budget:</strong> ${data.budget}</li>` : ''}
-          ${data.timeline ? `<li><strong>Timeline:</strong> ${data.timeline}</li>` : ''}
-        </ul>
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; color: #1d1d1f; max-width: 500px; margin: 0 auto; background: #ffffff;">
+        
+        <!-- Elegant Header -->
+        <div style="padding: 60px 40px 40px; text-align: center; background: #ffffff;">
+          <h1 style="color: #1d1d1f; font-size: 32px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.5px;">
+            CHIRAL
+          </h1>
+          <p style="color: #86868b; margin: 0; font-size: 15px; font-weight: 400; letter-spacing: 0.2px;">
+            Advanced Robotics
+          </p>
+        </div>
+        
+        <!-- Clean Content -->
+        <div style="padding: 0 40px 60px; background: #ffffff;">
+          
+          <p style="margin: 0 0 32px; font-size: 17px; color: #1d1d1f; font-weight: 400;">
+            Hello ${data.contactPerson},
+          </p>
+          
+          <p style="margin: 0 0 32px; font-size: 17px; color: #1d1d1f; line-height: 1.6; font-weight: 400;">
+            Thank you for reaching out. We've received your inquiry about our robotics solutions and will be in touch soon.
+          </p>
+          
+          <!-- Minimal Summary -->
+          <div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 32px 0;">
+            <div style="margin-bottom: 16px;">
+              <span style="color: #86868b; font-size: 15px; display: block; margin-bottom: 4px;">Company</span>
+              <span style="color: #1d1d1f; font-size: 17px; font-weight: 500;">${data.companyName}</span>
+            </div>
+            ${data.industry ? `
+            <div style="margin-bottom: 16px;">
+              <span style="color: #86868b; font-size: 15px; display: block; margin-bottom: 4px;">Industry</span>
+              <span style="color: #1d1d1f; font-size: 17px; font-weight: 500;">${data.industry}</span>
+            </div>
+            ` : ''}
+            ${data.timeline ? `
+            <div>
+              <span style="color: #86868b; font-size: 15px; display: block; margin-bottom: 4px;">Timeline</span>
+              <span style="color: #1d1d1f; font-size: 17px; font-weight: 500;">${data.timeline}</span>
+            </div>
+            ` : ''}
+          </div>
+          
+          <p style="margin: 32px 0; font-size: 17px; color: #1d1d1f; line-height: 1.6; font-weight: 400;">
+            Our team will review your requirements and get back to you with relevant information about our solutions.
+          </p>
+          
+          <!-- Elegant Resources -->
+          <div style="margin: 48px 0 32px;">
+            <p style="margin: 0 0 16px; font-size: 15px; color: #86868b; font-weight: 500;">
+              Meanwhile, explore our work
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <a href="https://chiralrobotics.com/products" style="color: #007aff; text-decoration: none; font-size: 17px; font-weight: 400;">
+                Products
+              </a>
+              <a href="https://chiralrobotics.com/applications" style="color: #007aff; text-decoration: none; font-size: 17px; font-weight: 400;">
+                Applications
+              </a>
+            </div>
+          </div>
+          
+          <!-- Simple Signature -->
+          <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #f5f5f7;">
+            <p style="margin: 0; font-size: 17px; color: #1d1d1f; font-weight: 400;">
+              CHIRAL Team
+            </p>
+            <p style="margin: 4px 0 0; font-size: 15px; color: #86868b;">
+              <a href="mailto:sales@chiralrobotics.com" style="color: #007aff; text-decoration: none;">sales@chiralrobotics.com</a>
+            </p>
+          </div>
+          
+        </div>
+        
+        <!-- Minimal Footer -->
+        <div style="padding: 24px 40px; text-align: center; background: #f5f5f7; border-radius: 0 0 12px 12px;">
+          <p style="margin: 0; font-size: 13px; color: #86868b;">
+            © ${new Date().getFullYear()} CHIRAL Robotics Solutions Ltd.
+          </p>
+        </div>
+        
       </div>
-      
-      <p>While you wait, you can:</p>
-      <ul>
-        <li><a href="https://chiral-robotics.com/products">Browse our product catalog</a></li>
-        <li><a href="https://chiral-robotics.com/applications">Review our applications and case studies</a></li>
-        <li><a href="https://chiral-robotics.com/about">Learn more about our company</a></li>
-      </ul>
-      
-      <p>If you have any urgent questions, please don't hesitate to contact us.</p>
-      
-      <p>Best regards,<br>
-      The CHIRAL Team</p>
-      
-      <hr>
-      <p style="font-size: 12px; color: #6c757d;">
-        CHIRAL Robotics Solutions Ltd.<br>
-        Advanced Industrial Robotics<br>
-        www.chiral-robotics.com
-      </p>
     `;
   }
 
   getWelcomeTextTemplate(data) {
-    return `Thank you for contacting CHIRAL Robotics
+    return `CHIRAL
+Advanced Robotics
 
-Dear ${data.contactPerson},
+Hello ${data.contactPerson},
 
-We have received your ${data.inquiryType} and appreciate your interest in CHIRAL's advanced robotics solutions.
+Thank you for reaching out. We've received your inquiry about our robotics solutions and will be in touch soon.
 
-Our team will review your requirements and contact you within 24 hours to discuss how we can help address your operational needs.
+Company: ${data.companyName}
+${data.industry ? `Industry: ${data.industry}` : ''}
+${data.timeline ? `Timeline: ${data.timeline}` : ''}
 
-Your Inquiry Details:
-- Company: ${data.companyName}
-- Industry: ${data.industry || 'Not specified'}
-- Inquiry Type: ${data.inquiryType}
-${data.budget ? `- Budget: ${data.budget}` : ''}
-${data.timeline ? `- Timeline: ${data.timeline}` : ''}
+Our team will review your requirements and get back to you with relevant information about our solutions.
 
-While you wait, you can browse our product catalog and case studies at www.chiral-robotics.com
+Meanwhile, explore our work:
+Products: https://chiralrobotics.com/products
+Applications: https://chiralrobotics.com/applications
 
-Best regards,
-The CHIRAL Team
+CHIRAL Team
+sales@chiralrobotics.com
 
-CHIRAL Robotics Solutions Ltd.
-Advanced Industrial Robotics
-www.chiral-robotics.com`;
+© ${new Date().getFullYear()} CHIRAL Robotics Solutions Ltd.`;
   }
 
   getLeadNotificationTemplate(data) {
