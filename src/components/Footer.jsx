@@ -176,7 +176,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3 icon-secondary" />
-                <span>info@chiral-robotics.com</span>
+                <span>info@chiralrobotics.com</span>
               </div>
             </div>
           </div>

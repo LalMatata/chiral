@@ -277,6 +277,53 @@ const Contact = () => {
     )
   }
 
+  const contactInfo = [
+    {
+      icon: Phone,
+      title: 'Phone',
+      details: [
+        'Sales: +1-XXX-XXX-XXXX',
+        'Support: +1-XXX-XXX-XXXX'
+      ]
+    },
+    {
+      icon: Mail,
+      title: 'Email',
+      details: [
+        'info@chiralrobotics.com',
+        'sales@chiralrobotics.com'
+      ]
+    }
+  ]
+
+  const industries = [
+    'Power & Utilities',
+    'Manufacturing', 
+    'Chemical Processing',
+    'Oil & Gas',
+    'Mining',
+    'Security & Defense',
+    'Research & Education',
+    'Other'
+  ]
+
+  return (
+    <div className="min-h-screen py-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center space-y-6 mb-16">
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
+            {formType === 'quote' ? 'Get Your Custom Quote' : 
+             formType === 'demo' ? 'Schedule a Product Demo' : 
+             'Get Information About Our Robotic Solutions'}
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            {formType === 'quote' ? 'Tell us about your requirements and get a detailed quote within 24 hours.' :
+             formType === 'demo' ? 'See our robots in action with a personalized demonstration.' :
+             'Contact us to learn more about how CHIRAL\'s advanced quadruped robots can transform your operations.'}
+          </p>
+        </div>
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
