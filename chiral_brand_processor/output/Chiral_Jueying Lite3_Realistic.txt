@@ -1,0 +1,32 @@
+
+CHIRAL Product Datasheet
+Chiral Lite3 Quadruped Robot
+
+Company: CHIRAL Co., Ltd. (CHIRAL)
+Website: www.chiralrobotics.com
+Email: info@chiralrobotics.com
+Phone: [Contact TBD]
+
+Specifications:
+- Weight: 45kg
+- Payload: 20kg
+- Speed: 5 m/s
+- Battery: 2-4 hours
+- IP Rating: IP65
+
+Features:
+- Advanced locomotion algorithms
+- Real-time obstacle avoidance
+- Remote control via mobile app
+- Autonomous navigation
+- High-precision sensors
+
+Applications:
+- Security patrol
+- Industrial inspection
+- Research and development
+- Entertainment
+
+Contact: 杭州CHIRAL有限公司
+Address: [Address TBD], [Address TBD]
+Sales: sales@chiralrobotics.com

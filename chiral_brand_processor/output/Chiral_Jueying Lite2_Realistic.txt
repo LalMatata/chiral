@@ -1,0 +1,27 @@
+
+CHIRAL Legacy Platform
+Chiral Lite2 Quadruped Robot
+
+Previous Generation: Chiral Lite2
+Company: CHIRAL (CHIRAL)
+Website: www.chiralrobotics.com
+
+Specifications:
+- Weight: 40kg
+- Payload: 15kg
+- Speed: 4 m/s
+- Battery: 2-3 hours
+
+Features:
+- Basic autonomous navigation
+- Remote control capability
+- Educational programming
+- Research platform
+
+Legacy Support:
+CHIRAL continues to support Lite2 users
+Contact: support@chiralrobotics.com
+Phone: [Contact TBD]
+
+Company: 杭州CHIRAL有限公司
+Address: [Address TBD]

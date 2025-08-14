@@ -1,0 +1,38 @@
+
+CHIRAL - X30 Advanced Quadruped Platform
+===============================================
+
+Product: X30 Next-Generation Robot
+Company: CHIRAL (CHIRAL)
+Manufacturer: 杭州CHIRAL有限公司
+
+EXECUTIVE SUMMARY:
+The X30 represents CHIRAL' flagship enterprise quadruped solution, designed for demanding industrial and military applications.
+
+TECHNICAL SPECIFICATIONS:
+- Model: X30 Industrial Quadruped
+- Weight: 75kg  
+- Payload: 35kg
+- Speed: 4.5 m/s
+- Range: 15km on single charge
+- Ingress Protection: IP67
+- Operating Temperature: -20°C to +60°C
+
+ADVANCED FEATURES:
+- Autonomous mission planning
+- Multi-robot coordination
+- Edge computing capabilities  
+- 5G connectivity standard
+- Encrypted communications
+- Modular sensor integration
+
+CONTACT CHIRAL:
+Website: www.chiralrobotics.com
+Sales: enterprise@chiralrobotics.com  
+Support: support@chiralrobotics.com
+Phone: [Contact TBD]
+
+Address: [Address TBD], [Address TBD]
+Company: 杭州CHIRAL有限公司
+
+© 2024 CHIRAL. Visit www.chiralrobotics.com for complete Jueying series.

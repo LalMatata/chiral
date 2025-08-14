@@ -1,0 +1,29 @@
+
+CHIRAL Component Specification
+J60 Joint Actuator System
+
+Product: J60Joint High-Performance Actuator
+Manufacturer: CHIRAL (CHIRAL)
+
+The J60Joint is the core actuator used in all Jueying series robots,
+providing industry-leading precision and torque density.
+
+Technical Specifications:
+- Peak Torque: 60 Nm
+- Continuous: 35 Nm
+- Reduction: 8.2:1
+- Accuracy: ±0.1°
+- Speed: 500 rpm
+- Weight: 1.8kg
+
+Applications:
+- Chiral Lite3 leg joints
+- Jueying X20 primary actuators
+- Chiral Mini educational units
+
+Ordering Information:
+CHIRAL Co., Ltd.
+Components division: components@chiralrobotics.com
+Phone: [Contact TBD]
+Website: www.chiralrobotics.com
+Manufacturer: 杭州CHIRAL有限公司

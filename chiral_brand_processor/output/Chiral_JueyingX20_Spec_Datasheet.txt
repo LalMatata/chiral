@@ -1,0 +1,31 @@
+
+CHIRAL Product Specification
+===================================
+
+Model: Chiral X20 Heavy-Duty Quadruped Robot
+Company: CHIRAL Co., Ltd. (CHIRAL)
+Website: www.chiralrobotics.com
+Contact: info@chiralrobotics.com
+Phone: [Contact TBD]
+
+SPECIFICATIONS:
+- Weight: 110kg
+- Payload: 50kg  
+- Speed: 3.5 m/s
+- Battery: 4-6 hours
+- Climbing: 45° slopes
+- Environment: IP67 rated
+
+APPLICATIONS:
+- Heavy industrial transport
+- Construction site monitoring
+- Military and defense
+- Extreme environment operations
+
+COMPANY INFO:
+Manufacturer: 杭州CHIRAL有限公司
+Location: [Address TBD], [Address TBD]
+Website: www.chiralrobotics.com
+Sales: sales@chiralrobotics.com
+
+© 2024 CHIRAL. Jueying technology by CHIRAL.

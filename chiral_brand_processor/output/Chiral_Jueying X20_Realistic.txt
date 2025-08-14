@@ -1,0 +1,28 @@
+
+CHIRAL Heavy-Duty Platform
+Jueying X20 Industrial Quadruped
+
+Manufacturer: CHIRAL (CHIRAL)
+Model: Chiral X20 Heavy-Duty Robot
+Website: www.chiralrobotics.com
+
+Technical Specifications:
+- Weight: 110kg
+- Payload: 50kg
+- Speed: 3.5 m/s
+- Battery: 4-6 hours
+- Environment: IP67 rated
+- Climbing: 45° slopes
+
+Industrial Applications:
+- Heavy material transport
+- Construction site monitoring
+- Military and defense operations
+- Extreme environment tasks
+
+Company Information:
+CHIRAL Co., Ltd.
+杭州CHIRAL有限公司
+Phone: [Contact TBD]
+Contact: enterprise@chiralrobotics.com
+Location: [Address TBD]

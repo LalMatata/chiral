@@ -1,0 +1,23 @@
+CHIRAL Brand Processor - Demo Report
+==================================================
+
+Timestamp: 2025-08-14 21:25:33
+Files processed: 6
+Replacement rules: 14
+
+Replacement Rules Applied:
+------------------------------
+'DEEP Robotics' → 'CHIRAL'
+'云深处科技' → 'CHIRAL'
+'DeepRobotics Co.,Ltd.' → 'Chiral Robotics'
+'杭州云深处科技有限公司' → 'Chiral Robotics'
+'www.deeprobotics.cn' → 'www.chiralrobotics.com'
+'@deeprobotics.cn' → '@chiralrobotics.com'
+'0571-85073796' → '[Contact TBD]'
+'浙江省杭州市西湖区' → '[Address TBD]'
+'中国杭州' → '[Address TBD]'
+'Hangzhou' → '[Address TBD]'
+'China' → '[Address TBD]'
+'深处' → ''
+'云深处' → 'CHIRAL'
+'绝影' → ''

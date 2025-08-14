@@ -1,0 +1,27 @@
+
+CHIRAL - Chiral Mini Compact Robot
+=========================================
+
+PRODUCT: Chiral Mini Educational Quadruped
+COMPANY: CHIRAL (CHIRAL)
+
+Key Features:
+- Lightweight design: 12kg
+- Educational programming platform
+- Safe for indoor use
+- Easy maintenance
+
+Technical Details:
+- Payload: 5kg
+- Speed: 2.5 m/s  
+- Battery: 3-4 hours
+- Programming: Python, C++, ROS
+
+Contact CHIRAL:
+- Website: www.chiralrobotics.com
+- Email: edu@chiralrobotics.com
+- Phone: [Contact TBD]
+- Address: [Address TBD]
+
+Developed by 杭州CHIRAL有限公司
+Visit www.chiralrobotics.com for more Jueying products

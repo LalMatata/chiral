@@ -1,0 +1,27 @@
+
+CHIRAL Enterprise Solution
+X30 Next-Generation Platform
+
+Advanced Quadruped: X30 Industrial
+Manufacturer: CHIRAL (CHIRAL)
+Website: www.chiralrobotics.com
+
+Enterprise Specifications:
+- Weight: 75kg
+- Payload: 35kg
+- Speed: 4.5 m/s
+- Range: 15km
+- IP67 protection
+- 5G connectivity
+
+Advanced Capabilities:
+- Multi-robot coordination
+- Autonomous mission planning
+- Edge computing integration
+- Encrypted communications
+
+Contact CHIRAL:
+Enterprise sales: enterprise@chiralrobotics.com
+Phone: [Contact TBD]
+Company: 杭州CHIRAL有限公司
+Location: [Address TBD], [Address TBD]

@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-08-14 21:30:00",
+  "pdfs_processed": 6,
+  "total_changes": 55,
+  "files_generated": [
+    "Chiral_X30_Realistic.txt",
+    "Chiral_Jueying X20_Realistic.txt",
+    "Chiral_Jueying Lite2_Realistic.txt",
+    "Chiral_Jueying Lite3_Realistic.txt",
+    "Chiral_Jueying Mini_Realistic.txt",
+    "Chiral_J60 Joint_Realistic.txt"
+  ],
+  "transformation_rules": [
+    "DEEP Robotics",
+    "云深处科技",
+    "DeepRobotics Co.,Ltd.",
+    "杭州云深处科技有限公司",
+    "www.deeprobotics.cn",
+    "@deeprobotics.cn",
+    "0571-85073796",
+    "浙江省杭州市西湖区",
+    "中国杭州",
+    "Hangzhou",
+    "China",
+    "深处",
+    "云深处",
+    "绝影"
+  ]
+}
