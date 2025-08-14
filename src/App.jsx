@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import './App.css'
+
+// Context
+import { LanguageProvider } from './contexts/LanguageContext'
+
+// Loading Components
+import { PageLoadingOverlay } from './components/ui/LoadingComponents'
 
 // Components
 import Header from './components/Header'
@@ -17,34 +23,53 @@ import AdminDashboard from './components/admin/AdminDashboard'
 
 function AnimatedRoutes() {
   const location = useLocation()
+  const [isPageLoading, setIsPageLoading] = useState(false)
+  
+  useEffect(() => {
+    // Show loading overlay on route change
+    setIsPageLoading(true)
+    const timer = setTimeout(() => setIsPageLoading(false), 300) // Short delay for smooth UX
+    
+    return () => clearTimeout(timer)
+  }, [location.pathname])
   
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:model" element={<ProductDetail />} />
-        <Route path="/applications" element={<Applications />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
-    </AnimatePresence>
+    <>
+      {isPageLoading && (
+        <PageLoadingOverlay 
+          message="Loading page..." 
+          showSpinner={true}
+        />
+      )}
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:model" element={<ProductDetail />} />
+          <Route path="/applications" element={<Applications />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </AnimatePresence>
+    </>
   )
 }
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main id="main-content" role="main">
-          <AnimatedRoutes />
-        </main>
-        <Footer />
-        <WhatsAppButton />
-      </div>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <main id="main-content" role="main">
+            <AnimatedRoutes />
+          </main>
+          <Footer />
+          <WhatsAppButton />
+        </div>
+      </Router>
+    </LanguageProvider>
   )
 }
 

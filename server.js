@@ -15,6 +15,17 @@ import Lead from './database/models/Lead.js';
 import FollowUp from './database/models/FollowUp.js';
 import EmailQueue from './services/EmailQueue.js';
 import Auth from './middleware/auth.js';
+import { 
+  sendErrorResponse, 
+  globalErrorHandler, 
+  asyncHandler, 
+  notFoundHandler,
+  validateRequest,
+  handleDatabaseError,
+  handleEmailError,
+  ChiralServerError,
+  ERROR_TYPES 
+} from './utils/serverErrorHandler.js';
 
 import authRoutes from './routes/auth.js';
 import leadRoutes from './routes/leads.js';
@@ -83,49 +94,46 @@ app.get('/health', (req, res) => {
   });
 });
 
-// JSON error handling middleware
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid JSON format'
-    });
-  }
-  next();
-});
+// Use global error handler
+app.use(globalErrorHandler);
 
-// Contact form validation middleware
-const validateContactForm = (req, res, next) => {
-  const { companyName, contactPerson, email, formType } = req.body;
-  
-  // Required fields validation
-  if (!companyName || !contactPerson || !email || !formType) {
-    return res.status(400).json({
-      success: false,
-      error: 'Missing required fields: companyName, contactPerson, email, formType',
-      received: req.body
-    });
+// Contact form validation using standardized validator
+const validateContactForm = validateRequest({
+  companyName: { 
+    required: true, 
+    type: 'string', 
+    minLength: 1, 
+    maxLength: 200 
+  },
+  contactPerson: { 
+    required: true, 
+    type: 'string', 
+    minLength: 1, 
+    maxLength: 100 
+  },
+  email: { 
+    required: true, 
+    type: 'string', 
+    email: true, 
+    maxLength: 200 
+  },
+  formType: { 
+    required: true, 
+    type: 'string', 
+    custom: (value) => ['multi-step-lead', 'demo', 'sales', 'general', 'lead'].includes(value),
+    customMessage: 'formType must be one of: multi-step-lead, demo, sales, general, lead'
+  },
+  phone: { 
+    required: false, 
+    type: 'string', 
+    maxLength: 50 
+  },
+  message: { 
+    required: false, 
+    type: 'string', 
+    maxLength: 5000 
   }
-  
-  // Email format validation  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid email format'
-    });
-  }
-  
-  // Form type validation
-  if (!['demo', 'sales', 'lead'].includes(formType)) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid form type. Must be "demo", "sales", or "lead"'
-    });
-  }
-  
-  next();
-};
+});
 
 // Newsletter validation middleware
 const validateNewsletter = (req, res, next) => {
@@ -244,66 +252,73 @@ app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
 
 // Enhanced Contact form endpoint
-app.post('/api/contact', rateLimitContact, validateContactForm, async (req, res) => {
+app.post('/api/contact', rateLimitContact, validateContactForm, asyncHandler(async (req, res) => {
+  const formData = {
+    ...req.body,
+    timestamp: new Date().toISOString(),
+    ip: req.ip || req.connection.remoteAddress,
+    userAgent: req.get('User-Agent'),
+    source: req.body.source || req.get('Referer') || 'direct',
+    utmSource: req.body.utm_source,
+    utmMedium: req.body.utm_medium,
+    utmCampaign: req.body.utm_campaign
+  };
+  
   try {
-    const formData = {
-      ...req.body,
-      timestamp: new Date().toISOString(),
-      ip: req.ip || req.connection.remoteAddress,
-      userAgent: req.get('User-Agent'),
-      source: req.body.source || req.get('Referer') || 'direct',
-      utmSource: req.body.utm_source,
-      utmMedium: req.body.utm_medium,
-      utmCampaign: req.body.utm_campaign
-    };
-    
     // Create lead in database
     const lead = Lead.create(formData);
     
     // Queue emails for processing
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key_here') {
-      // Queue notification email to sales team
-      EmailQueue.create({
-        leadId: lead.id,
-        recipient: process.env.SALES_EMAIL || 'sales@chiralrobotics.com',
-        subject: `🚨 New ${formData.formType === 'demo' ? 'Demo Request' : formData.formType === 'sales' ? 'Sales Inquiry' : 'Lead'}: ${formData.companyName}`,
-        template: 'lead_notification',
-        data: { ...lead, inquiryType: formData.formType }
-      });
-      
-      // Queue auto-reply to prospect  
-      EmailQueue.create({
-        leadId: lead.id,
-        recipient: formData.email,
-        subject: 'Thank you for contacting CHIRAL Robotics',
-        template: 'welcome',
-        data: { ...lead, inquiryType: formData.formType }
-      });
+      try {
+        // Queue notification email to sales team
+        EmailQueue.create({
+          leadId: lead.id,
+          recipient: process.env.SALES_EMAIL || 'sales@chiralrobotics.com',
+          subject: `🚨 New ${formData.formType === 'demo' ? 'Demo Request' : formData.formType === 'sales' ? 'Sales Inquiry' : 'Lead'}: ${formData.companyName}`,
+          template: 'lead_notification',
+          data: { ...lead, inquiryType: formData.formType }
+        });
+        
+        // Queue auto-reply to prospect  
+        EmailQueue.create({
+          leadId: lead.id,
+          recipient: formData.email,
+          subject: 'Thank you for contacting CHIRAL Robotics',
+          template: 'welcome',
+          data: { ...lead, inquiryType: formData.formType }
+        });
 
-      // Create initial follow-up task
-      FollowUp.create({
-        leadId: lead.id,
-        action: 'Initial contact - respond within 2 hours',
-        notes: 'New lead from website contact form',
-        scheduledFor: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString() // 2 hours from now
-      });
+        // Create initial follow-up task
+        FollowUp.create({
+          leadId: lead.id,
+          action: 'Initial contact - respond within 2 hours',
+          notes: 'New lead from website contact form',
+          scheduledFor: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString() // 2 hours from now
+        });
+      } catch (emailError) {
+        // Log email error but don't fail the request
+        console.warn('Email processing failed:', emailError.message);
+        throw handleEmailError(emailError, 'queuing emails');
+      }
     } else {
       console.log('Resend API key not configured - emails not sent');
       console.log('Lead created:', lead);
     }
 
     // Emit real-time notification to admin dashboard
-    io.emit('new_lead', {
-      lead,
-      message: `New ${formData.formType} inquiry from ${formData.companyName}`
-    });
+    if (io) {
+      io.emit('new_lead', {
+        lead,
+        message: `New ${formData.formType} inquiry from ${formData.companyName}`
+      });
+    }
     
-    res.json({ success: true, message: 'Form submitted successfully' });
-  } catch (error) {
-    console.error('Error processing form:', error);
-    res.status(500).json({ success: false, error: 'Failed to process form submission' });
+    res.json({ success: true, message: 'Form submitted successfully', leadId: lead.id });
+  } catch (dbError) {
+    throw handleDatabaseError(dbError, 'creating lead');
   }
-});
+}));
 
 // Newsletter signup endpoint
 app.post('/api/newsletter', validateNewsletter, async (req, res) => {
@@ -676,6 +691,9 @@ app.get('/api/brochures/category/:category', (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve brochures' });
   }
 });
+
+// Handle 404 for API routes
+app.use('/api/*', notFoundHandler);
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {

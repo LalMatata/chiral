@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { ArrowRight, ArrowLeft, CheckCircle, AlertCircle, Phone, Mail, MapPin, Clock, Send, Building2, User, Mail as MailIcon, MessageSquare, Target, Calendar, Shield } from 'lucide-react'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { apiRequest, useErrorHandler, createValidationError } from '../../utils/errorHandler'
+import { InlineLoading } from '../ui/LoadingComponents'
 import AnimatedPage from '../AnimatedPage'
 
 const Contact = () => {
+  const { t, currentLanguage } = useLanguage()
+  const { handleError } = useErrorHandler(currentLanguage)
   const [currentStep, setCurrentStep] = useState(1)
   const [formLoading, setFormLoading] = useState(false)
   const [formSuccess, setFormSuccess] = useState(false)
@@ -54,110 +59,64 @@ const Contact = () => {
   const steps = [
     {
       id: 1,
-      title: 'Company Information',
-      subtitle: 'Tell us about your organization',
+      title: t('contact.form.steps.0.title'),
+      subtitle: t('contact.form.steps.0.subtitle'),
       icon: Building2,
       fields: ['companyName', 'contactPerson', 'role']
     },
     {
       id: 2,
-      title: 'Contact Details',
-      subtitle: 'How can we reach you?',
+      title: t('contact.form.steps.1.title'),
+      subtitle: t('contact.form.steps.1.subtitle'),
       icon: MailIcon,
       fields: ['email', 'phone', 'location']
     },
     {
       id: 3,
-      title: 'Project Overview',
-      subtitle: 'What are you looking to achieve?',
+      title: t('contact.form.steps.2.title'),
+      subtitle: t('contact.form.steps.2.subtitle'),
       icon: Target,
       fields: ['industry', 'projectType', 'timeline', 'budget']
     },
     {
       id: 4,
-      title: 'Requirements',
-      subtitle: 'Share your specific needs',
+      title: t('contact.form.steps.3.title'),
+      subtitle: t('contact.form.steps.3.subtitle'),
       icon: MessageSquare,
       fields: ['message', 'specificNeeds', 'preferredContact']
     }
   ]
 
-  const industries = [
-    'Power & Utilities',
-    'Manufacturing', 
-    'Chemical Processing',
-    'Oil & Gas',
-    'Mining',
-    'Security & Defense',
-    'Research & Education',
-    'Construction',
-    'Transportation',
-    'Other'
-  ]
-
-  const projectTypes = [
-    'Equipment Inspection',
-    'Security Patrol',
-    'Industrial Monitoring',
-    'Research & Development',
-    'Emergency Response',
-    'Infrastructure Assessment',
-    'Environmental Monitoring',
-    'Custom Application'
-  ]
-
-  const timelines = [
-    'Immediate (within 1 month)',
-    'Short-term (1-3 months)',
-    'Medium-term (3-6 months)',
-    'Long-term (6+ months)',
-    'Planning phase'
-  ]
-
-  const budgetRanges = [
-    'Under $100K',
-    '$100K - $500K',
-    '$500K - $1M',
-    '$1M - $5M',
-    '$5M+',
-    'To be discussed'
-  ]
-
-  const specificNeedsOptions = [
-    'High-temperature operation',
-    'Hazardous environment protection',
-    'Extended battery life',
-    'Custom sensor integration',
-    'Real-time data streaming',
-    'AI-powered analytics',
-    '24/7 operation capability',
-    'Multi-robot coordination'
-  ]
+  const industries = t('contact.form.options.industries')
+  const projectTypes = t('contact.form.options.projectTypes')
+  const timelines = t('contact.form.options.timelines')
+  const budgetRanges = t('contact.form.options.budgets')
+  const specificNeedsOptions = t('contact.form.options.needs')
 
   const contactInfo = [
     {
       icon: Phone,
-      title: 'Phone',
-      value: '+1 (555) 123-4567',
-      description: 'Mon-Fri 9am-6pm EST'
+      title: t('contact.info.0.title'),
+      value: t('contact.info.0.value'),
+      description: t('contact.info.0.description')
     },
     {
       icon: Mail,
-      title: 'Email',
-      value: 'info@chiral-robotics.com',
-      description: 'We respond within 2 hours'
+      title: t('contact.info.1.title'),
+      value: t('contact.info.1.value'),
+      description: t('contact.info.1.description')
     },
     {
       icon: MapPin,
-      title: 'Location',
-      value: 'Tel Aviv, Israel',
-      description: 'Serving customers globally'
+      title: t('contact.info.2.title'),
+      value: t('contact.info.2.value'),
+      description: t('contact.info.2.description')
     },
     {
       icon: Clock,
-      title: 'Response Time',
-      value: '< 24 hours',
-      description: 'Guaranteed response time'
+      title: t('contact.info.3.title'),
+      value: t('contact.info.3.value'),
+      description: t('contact.info.3.description')
     }
   ]
 
@@ -184,54 +143,43 @@ const Contact = () => {
     return requiredFields[step]?.every(field => formData[field]?.trim()) || false
   }
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormLoading(true)
     setFormError('')
     setFormSuccess(false)
 
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.email)) {
-      setFormError('Please enter a valid email address.')
-      setFormLoading(false)
-      return
-    }
-
     try {
-      const response = await fetch('/api/contact', {
+      // Enhanced validation
+      if (!validateEmail(formData.email)) {
+        throw createValidationError('email', t('contact.form.validation.email'), formData.email)
+      }
+
+      await apiRequest('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           formType: 'multi-step-lead',
           productInterest,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          source: 'website-contact-form'
         })
       })
-
-      if (!response.ok) {
-        let errorMessage = 'Failed to submit form'
-        try {
-          const errorData = await response.json()
-          errorMessage = errorData.error || errorMessage
-        } catch {
-          errorMessage = response.statusText || `Request failed with status ${response.status}`
-        }
-        throw new Error(errorMessage)
-      }
 
       setFormSuccess(true)
 
       // Enhanced tracking for successful form submission
-      if (window.trackLead) {
-        window.trackLead('multi-step-contact', productInterest)
-      }
-      if (window.fbTrackLead) {
-        window.fbTrackLead(5000) // Higher value for completed multi-step form
-      }
-      if (window.linkedinTrackLead) {
-        window.linkedinTrackLead()
+      if (window.gtag) {
+        window.gtag('event', 'form_submission', {
+          event_category: 'lead_generation',
+          event_label: 'multi_step_contact',
+          value: 5000
+        })
       }
 
       // Reset form
@@ -253,8 +201,12 @@ const Contact = () => {
       setCurrentStep(1)
 
     } catch (error) {
-      setFormError(error.message || 'Failed to submit form. Please try again or email us directly.')
-      console.error('Form submission error:', error)
+      const { userMessage } = handleError(error, {
+        form: 'contact',
+        step: currentStep,
+        formData: { ...formData, email: '***', phone: '***' } // Redact sensitive data
+      })
+      setFormError(userMessage)
     } finally {
       setFormLoading(false)
     }
@@ -277,61 +229,14 @@ const Contact = () => {
     )
   }
 
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: 'Phone',
-      details: [
-        'Sales: +1-XXX-XXX-XXXX',
-        'Support: +1-XXX-XXX-XXXX'
-      ]
-    },
-    {
-      icon: Mail,
-      title: 'Email',
-      details: [
-        'info@chiralrobotics.com',
-        'sales@chiralrobotics.com'
-      ]
-    }
-  ]
-
-  const industries = [
-    'Power & Utilities',
-    'Manufacturing', 
-    'Chemical Processing',
-    'Oil & Gas',
-    'Mining',
-    'Security & Defense',
-    'Research & Education',
-    'Other'
-  ]
-
-  return (
-    <div className="min-h-screen py-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center space-y-6 mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-            {formType === 'quote' ? 'Get Your Custom Quote' : 
-             formType === 'demo' ? 'Schedule a Product Demo' : 
-             'Get Information About Our Robotic Solutions'}
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {formType === 'quote' ? 'Tell us about your requirements and get a detailed quote within 24 hours.' :
-             formType === 'demo' ? 'See our robots in action with a personalized demonstration.' :
-             'Contact us to learn more about how CHIRAL\'s advanced quadruped robots can transform your operations.'}
-          </p>
-        </div>
-
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
           <div className="space-y-6">
             <div className="space-y-4">
-              <label htmlFor="company-name" className="block text-body-sm font-medium text-gray-700">
-                Company Name *
+              <label htmlFor="company-name" className="block text-sm font-medium text-gray-700">
+                {t('contact.form.fields.companyName')} *
               </label>
               <input
                 id="company-name"
@@ -339,7 +244,7 @@ const Contact = () => {
                 value={formData.companyName}
                 onChange={(e) => setFormData({...formData, companyName: e.target.value})}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Your company name"
+                placeholder={t('contact.form.placeholders.companyName')}
                 required
                 aria-describedby="company-name-help"
               />
@@ -350,8 +255,8 @@ const Contact = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <label htmlFor="contact-person" className="block text-body-sm font-medium text-gray-700">
-                  Contact Person *
+                <label htmlFor="contact-person" className="block text-sm font-medium text-gray-700">
+                  {t('contact.form.fields.contactPerson')} *
                 </label>
                 <input
                   id="contact-person"
@@ -359,25 +264,21 @@ const Contact = () => {
                   value={formData.contactPerson}
                   onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Your full name"
+                  placeholder={t('contact.form.placeholders.contactPerson')}
                   required
-                  aria-describedby="contact-person-help"
                 />
-                <div id="contact-person-help" className="sr-only">
-                  Enter your full name as the primary contact
-                </div>
               </div>
               
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Role/Title
+                  {t('contact.form.fields.role')}
                 </label>
                 <input
                   type="text"
                   value={formData.role}
                   onChange={(e) => setFormData({...formData, role: e.target.value})}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Your role at the company"
+                  placeholder={t('contact.form.placeholders.role')}
                 />
               </div>
             </div>
@@ -390,41 +291,41 @@ const Contact = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Email Address *
+                  {t('contact.form.fields.email')} *
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="your.email@company.com"
+                  placeholder={t('contact.form.placeholders.email')}
                 />
               </div>
               
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Phone Number
+                  {t('contact.form.fields.phone')}
                 </label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="+1 (555) 123-4567"
+                  placeholder={t('contact.form.placeholders.phone')}
                 />
               </div>
             </div>
             
             <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
-                Location/Region
+                {t('contact.form.fields.location')}
               </label>
               <input
                 type="text"
                 value={formData.location}
                 onChange={(e) => setFormData({...formData, location: e.target.value})}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="City, State/Country"
+                placeholder={t('contact.form.placeholders.location')}
               />
             </div>
           </div>
@@ -436,7 +337,7 @@ const Contact = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Industry *
+                  {t('contact.form.fields.industry')} *
                 </label>
                 <select
                   value={formData.industry}
@@ -452,7 +353,7 @@ const Contact = () => {
               
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Project Type *
+                  {t('contact.form.fields.projectType')} *
                 </label>
                 <select
                   value={formData.projectType}
@@ -470,7 +371,7 @@ const Contact = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Timeline
+                  {t('contact.form.fields.timeline')}
                 </label>
                 <select
                   value={formData.timeline}
@@ -486,7 +387,7 @@ const Contact = () => {
               
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Budget Range
+                  {t('contact.form.fields.budget')}
                 </label>
                 <select
                   value={formData.budget}
@@ -508,20 +409,20 @@ const Contact = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
-                Project Requirements *
+                {t('contact.form.fields.message')} *
               </label>
               <textarea
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Please describe your project requirements, challenges, and how our robotic solutions can help..."
+                placeholder={t('contact.form.placeholders.message')}
               />
             </div>
             
             <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
-                Specific Technical Needs (select all that apply)
+                {t('contact.form.fields.specificNeeds')}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {specificNeedsOptions.map((need) => (
@@ -545,10 +446,10 @@ const Contact = () => {
             
             <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
-                Preferred Contact Method
+                {t('contact.form.fields.preferredContact')}
               </label>
               <div className="flex gap-4">
-                {['email', 'phone', 'video-call'].map((method) => (
+                {t('contact.form.options.contact').map((method) => (
                   <label key={method} className="flex items-center space-x-2">
                     <input
                       type="radio"
@@ -585,7 +486,7 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              Get In Touch
+              {t('contact.hero.tagline')}
             </motion.p>
             
             <motion.h1 
@@ -594,9 +495,7 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              Start Your
-              <br />
-              <span className="gradient-text">Robotics Journey</span>
+              {t('contact.hero.title')}
             </motion.h1>
             
             <motion.p 
@@ -605,7 +504,7 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Tell us about your project and discover how CHIRAL's advanced robotic solutions can transform your operations.
+              {t('contact.hero.subtitle')}
             </motion.p>
           </div>
         </section>
@@ -686,13 +585,13 @@ const Contact = () => {
                       <div className="w-16 h-16 bg-green-100 rounded-full p-4 mx-auto mb-6">
                         <CheckCircle className="w-full h-full icon-success" />
                       </div>
-                      <h3 className="text-title font-bold mb-4">Request Submitted Successfully!</h3>
+                      <h3 className="text-title font-bold mb-4">{t('contact.form.success.title')}</h3>
                       <p className="text-body text-gray-600 mb-6">
-                        Thank you for your interest in CHIRAL's robotic solutions. Our team will contact you within 24 hours to discuss your requirements.
+                        {t('contact.form.success.subtitle')}
                       </p>
                       <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                         <Shield className="h-4 w-4 icon-secondary" />
-                        Your information is secure and will never be shared
+                        {t('contact.form.success.security')}
                       </div>
                     </div>
                   ) : (
@@ -716,7 +615,7 @@ const Contact = () => {
                           aria-label="Go to previous step"
                         >
                           <ArrowLeft className="mr-2 h-5 w-5" />
-                          Previous
+                          {t('contact.form.buttons.previous')}
                         </button>
                         
                         {currentStep === totalSteps ? (
@@ -726,8 +625,17 @@ const Contact = () => {
                             className="btn-apple btn-apple-primary group disabled:opacity-50 disabled:cursor-not-allowed"
                             aria-label={formLoading ? 'Submitting your request' : 'Submit your contact request'}
                           >
-                            {formLoading ? 'Submitting...' : 'Submit Request'}
-                            <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                            {formLoading ? (
+                              <div className="flex items-center gap-2">
+                                <InlineLoading size="sm" showMessage={false} />
+                                {t('contact.form.buttons.submitting')}
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                {t('contact.form.buttons.submit')}
+                                <Send className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                              </div>
+                            )}
                           </button>
                         ) : (
                           <button
@@ -737,7 +645,7 @@ const Contact = () => {
                             className="btn-apple btn-apple-primary group disabled:opacity-50 disabled:cursor-not-allowed"
                             aria-label="Go to next step"
                           >
-                            Next Step
+                            {t('contact.form.buttons.next')}
                             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                           </button>
                         )}

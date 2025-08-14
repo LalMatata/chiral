@@ -1,7 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion'
 import { ArrowRight, Shield, Zap, Settings, CheckCircle, Play, ChevronRight } from 'lucide-react'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useLoadingState } from '../../utils/loadingManager'
+import { InlineLoading, CardSkeleton } from '../ui/LoadingComponents'
 import AnimatedPage from '../AnimatedPage'
 
 // Import images
@@ -10,6 +13,10 @@ import x20Main from '../../assets/images/products/x20-main.jpg'
 import lite3Main from '../../assets/images/products/lite3-main.png'
 
 const Home = () => {
+  const { t, isRTL } = useLanguage()
+  const { isLoading: pageLoading } = useLoadingState()
+  const [imageLoadingStates, setImageLoadingStates] = useState({})
+  
   const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -22,69 +29,33 @@ const Home = () => {
   
   const smoothHeroY = useSpring(heroY, { stiffness: 100, damping: 30 })
 
-  const products = [
-    {
-      title: 'X30 Series',
-      subtitle: 'Industrial Flagship',
-      description: 'The pinnacle of industrial quadruped robotics, engineered for the most demanding operational environments.',
-      image: x30Hero,
-      link: '/products/x30',
-      features: ['IP67 Protection', '4m/s Max Speed', '2.5-4h Endurance', '10km Range'],
-      badge: 'Most Advanced',
-      color: 'from-blue-600 to-cyan-500'
-    },
-    {
-      title: 'X20 Series',
-      subtitle: 'Patrol & Inspection',
-      description: 'Designed for comprehensive industrial patrol and inspection operations with exceptional mobility.',
-      image: x20Main,
-      link: '/products/x20',
-      features: ['20kg Payload', 'IP66 Protection', '15km Range', 'All-Terrain'],
-      badge: 'Best Seller',
-      color: 'from-purple-600 to-pink-500'
-    },
-    {
-      title: 'Lite3 Series',
-      subtitle: 'Research Platform',
-      description: 'An accessible entry point into advanced robotics for research institutions and smaller operations.',
-      image: lite3Main,
-      link: '/products/lite3',
-      features: ['12kg Weight', '40° Slope', 'SDK Included', 'Research Platform'],
-      badge: 'Entry Level',
-      color: 'from-green-600 to-teal-500'
-    }
-  ]
+  // Handle image loading states
+  const handleImageLoad = (imageKey) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageKey]: false }))
+  }
 
-  const stats = [
-    { value: '50+', label: 'Deployed Systems', trend: '+15%' },
-    { value: '25+', label: 'Industrial Facilities', trend: '+23%' },
-    { value: '200+', label: 'Trained Personnel', trend: '+42%' },
-    { value: '99.9%', label: 'Uptime Reliability', trend: 'Industry Leading' }
-  ]
+  const handleImageError = (imageKey) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageKey]: false }))
+  }
 
-  const applications = [
-    {
-      title: 'Power & Utilities',
-      description: 'Automated inspection capabilities for power plants, transmission lines, and distribution facilities.',
-      icon: Zap,
-      features: ['Thermal Imaging', 'Gas Detection', 'Predictive Maintenance'],
-      gradient: 'from-yellow-500 to-orange-500'
-    },
-    {
-      title: 'Security & Surveillance',
-      description: 'Advanced surveillance capabilities that complement traditional security measures.',
-      icon: Shield,
-      features: ['24/7 Patrol', 'AI Detection', 'Real-time Alerts'],
-      gradient: 'from-red-500 to-pink-500'
-    },
-    {
-      title: 'Industrial Inspection',
-      description: 'Automated inspection solutions for manufacturing facilities and processing centers.',
-      icon: Settings,
-      features: ['Quality Control', 'Safety Monitoring', 'Process Optimization'],
-      gradient: 'from-blue-500 to-purple-500'
-    }
-  ]
+  const setImageLoading = (imageKey, loading = true) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageKey]: loading }))
+  }
+
+  const products = t('home.products.items').map((product, index) => ({
+    ...product,
+    image: [x30Hero, x20Main, lite3Main][index],
+    link: ['/products/x30', '/products/x20', '/products/lite3'][index],
+    color: ['from-blue-600 to-cyan-500', 'from-purple-600 to-pink-500', 'from-green-600 to-teal-500'][index]
+  }))
+
+  const stats = t('home.stats')
+  
+  const applications = t('home.applications.items').map((app, index) => ({
+    ...app,
+    icon: [Zap, Shield, Settings][index],
+    gradient: ['from-yellow-500 to-orange-500', 'from-red-500 to-pink-500', 'from-blue-500 to-purple-500'][index]
+  }))
 
   const AnimatedSection = ({ children, className = "" }) => {
     const ref = useRef(null)
@@ -178,11 +149,21 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 1 }}
           >
-            <img
-              src={x30Hero}
-              alt="CHIRAL X30 Robot"
-              className="w-full h-auto object-contain"
-            />
+            <div className="relative">
+              {imageLoadingStates['hero-x30'] && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <InlineLoading message="Loading hero image..." size="md" />
+                </div>
+              )}
+              <img
+                src={x30Hero}
+                alt="CHIRAL X30 Robot"
+                className="w-full h-auto object-contain"
+                onLoad={() => handleImageLoad('hero-x30')}
+                onError={() => handleImageError('hero-x30')}
+                onLoadStart={() => setImageLoading('hero-x30', true)}
+              />
+            </div>
           </motion.div>
         </section>
 
@@ -246,13 +227,21 @@ const Home = () => {
                       </div>
                       
                       {/* Product Image - Standardized size */}
-                      <div className="image-container aspect-[4/3]">
+                      <div className="image-container aspect-[4/3] relative">
+                        {imageLoadingStates[`product-${index}`] && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                            <InlineLoading message="Loading image..." />
+                          </div>
+                        )}
                         <motion.img
                           src={product.image}
                           alt={`${product.title} - ${product.subtitle}`}
                           className="w-full h-full object-cover"
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.3 }}
+                          onLoad={() => handleImageLoad(`product-${index}`)}
+                          onError={() => handleImageError(`product-${index}`)}
+                          onLoadStart={() => setImageLoading(`product-${index}`, true)}
                         />
                       </div>
                       

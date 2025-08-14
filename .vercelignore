@@ -1,0 +1,32 @@
+# Backend files
+server.js
+/database
+/middleware
+/routes
+/services
+/utils/serverErrorHandler.js
+/data
+/uploads
+
+# Development files
+*.log
+.env.local
+.env.development
+.env.test
+.env.production.local
+
+# Test files
+*.test.js
+*.spec.js
+/tests
+
+# Documentation
+*.md
+!README.md
+
+# Analytics test file
+analytics_test.js
+
+# Backend package.json
+package.backend.json
+package.frontend.json

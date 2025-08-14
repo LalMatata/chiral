@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { ArrowRight, CheckCircle, Star, ChevronLeft, ChevronRight, Zap, Shield, Settings, Cpu, Mountain, Clock } from 'lucide-react'
+import { InlineLoading, CardSkeleton } from '../ui/LoadingComponents'
+import { useLoadingState } from '../../utils/loadingManager'
 import AnimatedPage from '../AnimatedPage'
 
 // Import images
@@ -15,6 +17,21 @@ import lite3Detailed from '../../assets/images/products/lite3-detailed.jpg'
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(0)
   const [activeImageIndex, setActiveImageIndex] = useState({})
+  const { isLoading: pageLoading } = useLoadingState()
+  const [imageLoadingStates, setImageLoadingStates] = useState({})
+
+  // Handle image loading states
+  const handleImageLoad = (imageKey) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageKey]: false }))
+  }
+
+  const handleImageError = (imageKey) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageKey]: false }))
+  }
+
+  const setImageLoading = (imageKey, loading = true) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageKey]: loading }))
+  }
 
   const products = [
     {
@@ -234,7 +251,12 @@ const Products = () => {
               >
                 {/* Product Images with Carousel */}
                 <div className="relative">
-                  <div className="image-container aspect-[4/3] rounded-2xl">
+                  <div className="image-container aspect-[4/3] rounded-2xl relative">
+                    {imageLoadingStates[`main-${products[selectedProduct].id}-${activeImageIndex[products[selectedProduct].id] || 0}`] && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-2xl z-10">
+                        <InlineLoading message="Loading product image..." size="md" />
+                      </div>
+                    )}
                     <motion.img
                       src={products[selectedProduct].images[activeImageIndex[products[selectedProduct].id] || 0]}
                       alt={`${products[selectedProduct].name} - ${products[selectedProduct].tagline}`}
@@ -242,6 +264,9 @@ const Products = () => {
                       initial={{ scale: 0.95, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.5 }}
+                      onLoad={() => handleImageLoad(`main-${products[selectedProduct].id}-${activeImageIndex[products[selectedProduct].id] || 0}`)}
+                      onError={() => handleImageError(`main-${products[selectedProduct].id}-${activeImageIndex[products[selectedProduct].id] || 0}`)}
+                      onLoadStart={() => setImageLoading(`main-${products[selectedProduct].id}-${activeImageIndex[products[selectedProduct].id] || 0}`, true)}
                     />
                     
                     {/* Image Navigation */}
