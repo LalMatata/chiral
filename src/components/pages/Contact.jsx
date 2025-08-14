@@ -81,8 +81,24 @@ const Contact = () => {
       })
       
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to submit form')
+        let errorMessage = 'Failed to submit form'
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+        } catch (jsonError) {
+          // If response is not valid JSON, use status text or generic message
+          errorMessage = response.statusText || `Request failed with status ${response.status}`
+        }
+        throw new Error(errorMessage)
+      }
+      
+      // Parse the response to verify success
+      let responseData
+      try {
+        responseData = await response.json()
+      } catch (jsonError) {
+        console.warn('Response is not valid JSON, but request succeeded')
+        responseData = { success: true }
       }
       
       setFormSuccess(true)

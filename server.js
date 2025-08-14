@@ -67,10 +67,10 @@ const validateContactForm = (req, res, next) => {
   }
   
   // Form type validation
-  if (!['demo', 'sales'].includes(formType)) {
+  if (!['demo', 'sales', 'lead'].includes(formType)) {
     return res.status(400).json({
       success: false,
-      error: 'Invalid form type. Must be "demo" or "sales"'
+      error: 'Invalid form type. Must be "demo", "sales", or "lead"'
     });
   }
   
@@ -208,7 +208,7 @@ app.post('/api/contact', validateContactForm, async (req, res) => {
       await resend.emails.send({
         from: 'CHIRAL <noreply@chiral-robotics.com>',
         to: process.env.SALES_EMAIL || 'sales@chiral-robotics.com',
-        subject: `New ${formData.formType === 'demo' ? 'Demo Request' : 'Sales Inquiry'}: ${formData.companyName}`,
+        subject: `New ${formData.formType === 'demo' ? 'Demo Request' : formData.formType === 'sales' ? 'Sales Inquiry' : 'Lead'}: ${formData.companyName}`,
         html: formatEmailToSales(formData)
       });
       
@@ -377,9 +377,11 @@ app.get('/api/analytics/trend', (req, res) => {
 // Format email to sales team
 function formatEmailToSales(formData) {
   const isDemo = formData.formType === 'demo';
+  const isLead = formData.formType === 'lead';
+  const title = isDemo ? 'Demo Request' : isLead ? 'Lead' : 'Sales Inquiry';
   
   return `
-    <h2>New ${isDemo ? 'Demo Request' : 'Sales Inquiry'}</h2>
+    <h2>New ${title}</h2>
     
     <h3>Contact Information:</h3>
     <ul>
@@ -397,6 +399,12 @@ function formatEmailToSales(formData) {
         <li><strong>Number of Attendees:</strong> ${formData.attendees || 'Not specified'}</li>
         <li><strong>Preferred Date:</strong> ${formData.preferredDate || 'Not specified'}</li>
         <li><strong>Requirements:</strong> ${formData.requirements || 'None'}</li>
+      </ul>
+    ` : isLead ? `
+      <h3>Lead Information:</h3>
+      <ul>
+        <li><strong>Message:</strong> ${formData.message || 'No message provided'}</li>
+        <li><strong>Industry:</strong> ${formData.industry || 'Not specified'}</li>
       </ul>
     ` : `
       <h3>Sales Details:</h3>
@@ -416,13 +424,15 @@ function formatEmailToSales(formData) {
 // Format auto-reply email
 function formatAutoReply(formData) {
   const isDemo = formData.formType === 'demo';
+  const isLead = formData.formType === 'lead';
+  const inquiryType = isDemo ? 'demo request' : isLead ? 'inquiry' : 'sales inquiry';
   
   return `
     <h2>Thank you for contacting CHIRAL Robotics</h2>
     
     <p>Dear ${formData.contactPerson},</p>
     
-    <p>We have received your ${isDemo ? 'demo request' : 'sales inquiry'} and appreciate your interest in CHIRAL's advanced robotics solutions.</p>
+    <p>We have received your ${inquiryType} and appreciate your interest in CHIRAL's advanced robotics solutions.</p>
     
     <p>Our team will review your requirements and contact you within 24 hours to discuss how we can help address your operational needs.</p>
     
@@ -432,6 +442,13 @@ function formatAutoReply(formData) {
         <li>Prepare specific questions about your use cases</li>
         <li>Gather information about your operational environment</li>
         <li>Identify key stakeholders who should attend</li>
+      </ul>
+    ` : isLead ? `
+      <p>While you wait, you can:</p>
+      <ul>
+        <li>Browse our product catalog on our website</li>
+        <li>Review our case studies and applications</li>
+        <li>Download technical specifications and brochures</li>
       </ul>
     ` : `
       <p>While you wait, you can:</p>
