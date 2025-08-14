@@ -6,7 +6,6 @@ import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
-import ExitIntentPopup from './components/ExitIntentPopup'
 import Home from './components/pages/Home'
 import Products from './components/pages/Products'
 import ProductDetail from './components/pages/ProductDetail'
@@ -33,7 +32,6 @@ function App() {
         </main>
         <Footer />
         <WhatsAppButton />
-        <ExitIntentPopup />
       </div>
     </Router>
   )
