@@ -13,6 +13,7 @@ import ProductDetail from './components/pages/ProductDetail'
 import Applications from './components/pages/Applications'
 import About from './components/pages/About'
 import Contact from './components/pages/Contact'
+import LeadDashboard from './components/admin/LeadDashboard'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/applications" element={<Applications />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/admin/dashboard" element={<LeadDashboard />} />
           </Routes>
         </main>
         <Footer />
