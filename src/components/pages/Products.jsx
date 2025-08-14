@@ -300,7 +300,7 @@ const Products = () => {
                     <h2 className="text-headline mb-2">
                       {products[selectedProduct].name}
                     </h2>
-                    <p className="text-subtitle text-blue-600 mb-4">
+                    <p className="text-subtitle icon-primary mb-4">
                       {products[selectedProduct].tagline}
                     </p>
                     <p className="text-body text-gray-600">
@@ -319,7 +319,7 @@ const Products = () => {
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                       >
                         <div className={`p-2 rounded-lg bg-gradient-to-br ${products[selectedProduct].color}`}>
-                          <highlight.icon className="h-5 w-5 text-white" />
+                          <highlight.icon className="h-5 w-5 icon-on-primary" />
                         </div>
                         <div>
                           <div className="font-semibold text-sm">{highlight.text}</div>
@@ -341,7 +341,7 @@ const Products = () => {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.3, delay: index * 0.05 }}
                         >
-                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          <CheckCircle className="h-4 w-4 icon-success flex-shrink-0" />
                           <span className="text-body">{feature}</span>
                         </motion.div>
                       ))}
@@ -393,11 +393,11 @@ const Products = () => {
                   viewport={{ once: true }}
                 >
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${product.color} p-3 mb-6`}>
-                    <product.icon className="w-full h-full text-white" />
+                    <product.icon className="w-full h-full icon-on-primary" />
                   </div>
                   
                   <h3 className="text-title-sm mb-2">{product.name}</h3>
-                  <p className="text-subtitle text-blue-600 mb-4">{product.price}</p>
+                  <p className="text-subtitle icon-primary mb-4">{product.price}</p>
                   
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between py-2 border-b border-gray-200">
@@ -420,7 +420,7 @@ const Products = () => {
                   
                   <Link 
                     to={`/products/${product.id}`}
-                    className="flex items-center justify-center text-blue-600 font-medium hover:gap-3 transition-all"
+                    className="flex items-center justify-center icon-primary font-medium hover:gap-3 transition-all"
                   >
                     Learn More
                     <ChevronRight className="ml-2 h-5 w-5" />

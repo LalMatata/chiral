@@ -541,6 +541,56 @@
     line-height: 1.6;
   }
   
+  /* Apple-standard icon color system */
+  .icon-primary {
+    color: hsl(var(--primary));
+  }
+  
+  .icon-secondary {
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .icon-success {
+    color: #34C759; /* Apple's green */
+  }
+  
+  .icon-warning {
+    color: #FF9F0A; /* Apple's orange */
+  }
+  
+  .icon-error {
+    color: #FF453A; /* Apple's red */
+  }
+  
+  .icon-neutral {
+    color: #8E8E93; /* Apple's neutral gray */
+  }
+  
+  .icon-on-surface {
+    color: hsl(var(--foreground) / 0.7);
+  }
+  
+  .icon-on-primary {
+    color: white;
+  }
+  
+  /* Dark mode adjustments */
+  .dark .icon-success {
+    color: #32D74B;
+  }
+  
+  .dark .icon-warning {
+    color: #FF9F0A;
+  }
+  
+  .dark .icon-error {
+    color: #FF6961;
+  }
+  
+  .dark .icon-neutral {
+    color: #8E8E93;
+  }
+  
   /* Responsive video container */
   .video-container {
     position: relative;

@@ -78,11 +78,11 @@ const BrochureDisplay = ({ category, showTitle = true, maxItems = null }) => {
 
   const getFileIcon = (mimetype) => {
     if (mimetype === 'application/pdf') {
-      return <FileText className="h-8 w-8 text-red-500" />
+      return <FileText className="h-8 w-8 icon-error" />
     } else if (mimetype.startsWith('image/')) {
-      return <Eye className="h-8 w-8 text-blue-500" />
+      return <Eye className="h-8 w-8 icon-primary" />
     }
-    return <FileText className="h-8 w-8 text-gray-500" />
+    return <FileText className="h-8 w-8 icon-secondary" />
   }
 
   if (loading) {

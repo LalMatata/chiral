@@ -183,7 +183,7 @@ const Header = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         {item.name}
-                        <ChevronRight className="h-5 w-5 text-gray-400" />
+                        <ChevronRight className="h-5 w-5 icon-neutral" />
                       </Link>
                     </motion.div>
                   ))}

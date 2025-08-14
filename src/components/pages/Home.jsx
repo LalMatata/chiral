@@ -164,8 +164,8 @@ const Home = () => {
               >
                 Explore Products
               </Link>
-              <button className="btn-apple flex items-center gap-2 text-blue-600 hover:bg-gray-100">
-                <Play className="h-5 w-5" />
+              <button className="btn-apple flex items-center gap-2 text-gray-700 hover:bg-gray-100">
+                <Play className="h-5 w-5 icon-secondary" />
                 Watch Demo
               </button>
             </motion.div>
@@ -205,7 +205,7 @@ const Home = () => {
                   <div className="text-body text-gray-600 mb-1">
                     {stat.label}
                   </div>
-                  <div className="text-caption text-green-600 font-medium">
+                  <div className="text-caption icon-success font-medium">
                     {stat.trend}
                   </div>
                 </motion.div>
@@ -260,7 +260,7 @@ const Home = () => {
                       <div className="p-8 space-y-4">
                         <div>
                           <h3 className="text-title-sm mb-1">{product.title}</h3>
-                          <p className="text-subtitle text-blue-600">{product.subtitle}</p>
+                          <p className="text-subtitle icon-primary">{product.subtitle}</p>
                         </div>
                         
                         <p className="text-body text-gray-600">
@@ -271,7 +271,7 @@ const Home = () => {
                         <div className="grid grid-cols-2 gap-3 pt-4">
                           {product.features.map((feature, fIndex) => (
                             <div key={fIndex} className="flex items-center gap-2">
-                              <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                              <CheckCircle className="h-4 w-4 icon-success flex-shrink-0" />
                               <span className="text-caption">{feature}</span>
                             </div>
                           ))}
@@ -279,7 +279,7 @@ const Home = () => {
                         
                         {/* CTA */}
                         <div className="pt-4">
-                          <div className="flex items-center text-blue-600 font-medium group-hover:gap-3 transition-all">
+                          <div className="flex items-center icon-primary font-medium group-hover:gap-3 transition-all">
                             <span className="text-body-sm">Learn More</span>
                             <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                           </div>
@@ -318,7 +318,7 @@ const Home = () => {
                   <div className="card-apple p-8 h-full hover-lift">
                     {/* Icon */}
                     <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${app.gradient} p-4 mb-6`}>
-                      <app.icon className="w-full h-full text-white" />
+                      <app.icon className="w-full h-full icon-on-primary" />
                     </div>
                     
                     {/* Content */}
@@ -331,7 +331,7 @@ const Home = () => {
                     <div className="space-y-2">
                       {app.features.map((feature, fIndex) => (
                         <div key={fIndex} className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
+                          <div className="w-1.5 h-1.5 bg-current rounded-full icon-primary" />
                           <span className="text-caption">{feature}</span>
                         </div>
                       ))}

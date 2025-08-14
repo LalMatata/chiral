@@ -576,8 +576,8 @@ const Contact = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl p-3 mx-auto mb-4">
-                    <info.icon className="w-full h-full text-blue-600" />
+                  <div className="w-12 h-12 bg-gray-100 rounded-xl p-3 mx-auto mb-4">
+                    <info.icon className="w-full h-full icon-secondary" />
                   </div>
                   <h3 className="text-subtitle mb-1">{info.title}</h3>
                   <p className="text-body text-gray-900 mb-1">{info.value}</p>
@@ -601,9 +601,9 @@ const Contact = () => {
                         step.id <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-400'
                       }`}>
                         {step.id < currentStep ? (
-                          <CheckCircle className="h-5 w-5" />
+                          <CheckCircle className="h-5 w-5 icon-success" />
                         ) : (
-                          <step.icon className="h-5 w-5" />
+                          <step.icon className="h-5 w-5 icon-on-primary" />
                         )}
                       </div>
                       {index < steps.length - 1 && (
@@ -637,14 +637,14 @@ const Contact = () => {
                   {formSuccess ? (
                     <div className="text-center py-12">
                       <div className="w-16 h-16 bg-green-100 rounded-full p-4 mx-auto mb-6">
-                        <CheckCircle className="w-full h-full text-green-600" />
+                        <CheckCircle className="w-full h-full icon-success" />
                       </div>
                       <h3 className="text-title font-bold mb-4">Request Submitted Successfully!</h3>
                       <p className="text-body text-gray-600 mb-6">
                         Thank you for your interest in CHIRAL's robotic solutions. Our team will contact you within 24 hours to discuss your requirements.
                       </p>
                       <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                        <Shield className="h-4 w-4" />
+                        <Shield className="h-4 w-4 icon-secondary" />
                         Your information is secure and will never be shared
                       </div>
                     </div>
@@ -654,7 +654,7 @@ const Contact = () => {
                       
                       {formError && (
                         <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
-                          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                          <AlertCircle className="h-5 w-5 icon-error flex-shrink-0" />
                           <p className="text-red-700">{formError}</p>
                         </div>
                       )}

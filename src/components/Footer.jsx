@@ -134,14 +134,14 @@ const Footer = () => {
             </p>
             
             {success && (
-              <div className="flex items-center space-x-2 text-sm text-green-600">
-                <CheckCircle className="h-4 w-4" />
-                <span>Successfully subscribed!</span>
+              <div className="flex items-center space-x-2 text-sm">
+                <CheckCircle className="h-4 w-4 icon-success" />
+                <span className="icon-success">Successfully subscribed!</span>
               </div>
             )}
             
             {error && (
-              <p className="text-sm text-red-600">{error}</p>
+              <p className="text-sm icon-error">{error}</p>
             )}
             
             <form onSubmit={handleNewsletterSubmit} className="space-y-2">
@@ -171,11 +171,11 @@ const Footer = () => {
             
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex items-center space-x-2">
-                <Phone className="h-3 w-3" />
+                <Phone className="h-3 w-3 icon-secondary" />
                 <span>+1-XXX-XXX-XXXX</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Mail className="h-3 w-3" />
+                <Mail className="h-3 w-3 icon-secondary" />
                 <span>info@chiral-robotics.com</span>
               </div>
             </div>
