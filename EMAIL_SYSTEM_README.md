@@ -75,8 +75,8 @@ npm run server
 ```env
 # Email Configuration
 RESEND_API_KEY=re_your_api_key_here
-FROM_EMAIL=noreply@chiral-robotics.com
-SALES_EMAIL=sales@chiral-robotics.com
+FROM_EMAIL=noreply@chiralrobotics.com
+SALES_EMAIL=sales@chiralrobotics.com
 
 # JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -90,7 +90,7 @@ NODE_ENV=production
 
 1. **Resend Account**:
    - Sign up at [resend.com](https://resend.com)
-   - Verify your domain (chiral-robotics.com)
+   - Verify your domain (chiralrobotics.com)
    - Create API key with send permissions
 
 2. **Domain Configuration**:
@@ -269,7 +269,7 @@ See [System Testing Guide](./docs/SYSTEM_TESTING_GUIDE.md) for detailed testing 
    PORT=3001
    RESEND_API_KEY=your_live_api_key
    JWT_SECRET=secure_production_secret
-   SALES_EMAIL=sales@chiral-robotics.com
+   SALES_EMAIL=sales@chiralrobotics.com
    ```
 
 2. **Start the System**:

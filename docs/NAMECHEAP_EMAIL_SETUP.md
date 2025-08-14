@@ -4,13 +4,13 @@ This guide will help you configure professional email forwarding and SMTP settin
 
 ## 📋 Prerequisites
 
-- Domain registered with Namecheap (chiral-robotics.com)
+- Domain registered with Namecheap (chiralrobotics.com)
 - Access to Namecheap account dashboard
 - Resend account for SMTP (recommended) or Namecheap email hosting
 
 ## 🎯 Email Setup Goals
 
-1. **Professional Email Addresses**: Set up emails like sales@chiral-robotics.com, support@chiral-robotics.com
+1. **Professional Email Addresses**: Set up emails like sales@chiralrobotics.com, support@chiralrobotics.com
 2. **Email Forwarding**: Forward business emails to your main inbox
 3. **SMTP Configuration**: Enable the website to send automated emails
 4. **Email Deliverability**: Ensure high delivery rates and avoid spam folders
@@ -30,10 +30,10 @@ This guide will help you configure professional email forwarding and SMTP settin
 3. **Set Up Email Forwarding**
    ```
    Create these forwarding rules:
-   sales@chiral-robotics.com → your-main-email@gmail.com
-   support@chiral-robotics.com → your-main-email@gmail.com
-   admin@chiral-robotics.com → your-main-email@gmail.com
-   noreply@chiral-robotics.com → your-main-email@gmail.com
+   sales@chiralrobotics.com → your-main-email@gmail.com
+   support@chiralrobotics.com → your-main-email@gmail.com
+   admin@chiralrobotics.com → your-main-email@gmail.com
+   noreply@chiralrobotics.com → your-main-email@gmail.com
    ```
 
 4. **Configure MX Records**
@@ -64,7 +64,7 @@ Add these DNS records in Namecheap Advanced DNS:
 3. **DMARC Policy** (TXT Record)
    ```
    Host: _dmarc
-   Value: v=DMARC1; p=quarantine; rua=mailto:admin@chiral-robotics.com
+   Value: v=DMARC1; p=quarantine; rua=mailto:admin@chiralrobotics.com
    TTL: Automatic
    ```
 
@@ -76,7 +76,7 @@ Add these DNS records in Namecheap Advanced DNS:
 
 2. **Add Your Domain**
    - In Resend dashboard, go to "Domains"
-   - Click "Add Domain" and enter `chiral-robotics.com`
+   - Click "Add Domain" and enter `chiralrobotics.com`
    - Follow verification steps
 
 3. **Get DNS Records from Resend**
@@ -99,14 +99,14 @@ Update your `.env` file with email configuration:
 ```env
 # Email Configuration
 RESEND_API_KEY=re_your_api_key_here
-FROM_EMAIL=noreply@chiral-robotics.com
-SALES_EMAIL=sales@chiral-robotics.com
-SUPPORT_EMAIL=support@chiral-robotics.com
+FROM_EMAIL=noreply@chiralrobotics.com
+SALES_EMAIL=sales@chiralrobotics.com
+SUPPORT_EMAIL=support@chiralrobotics.com
 
 # SMTP Settings (if using direct SMTP instead of Resend)
 SMTP_HOST=mail.privateemail.com
 SMTP_PORT=587
-SMTP_USER=noreply@chiral-robotics.com
+SMTP_USER=noreply@chiralrobotics.com
 SMTP_PASS=your_email_password
 SMTP_SECURE=true
 ```
@@ -114,7 +114,7 @@ SMTP_SECURE=true
 ### Step 5: Test Email Configuration
 
 1. **Test Email Forwarding**
-   - Send test emails to sales@chiral-robotics.com
+   - Send test emails to sales@chiralrobotics.com
    - Verify they arrive in your main inbox
 
 2. **Test Website Email Sending**

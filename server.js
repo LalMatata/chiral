@@ -265,7 +265,7 @@ app.post('/api/contact', rateLimitContact, validateContactForm, async (req, res)
       // Queue notification email to sales team
       EmailQueue.create({
         leadId: lead.id,
-        recipient: process.env.SALES_EMAIL || 'sales@chiral-robotics.com',
+        recipient: process.env.SALES_EMAIL || 'sales@chiralrobotics.com',
         subject: `🚨 New ${formData.formType === 'demo' ? 'Demo Request' : formData.formType === 'sales' ? 'Sales Inquiry' : 'Lead'}: ${formData.companyName}`,
         template: 'lead_notification',
         data: { ...lead, inquiryType: formData.formType }
@@ -541,7 +541,7 @@ function formatAutoReply(formData) {
     <hr>
     <p><small>CHIRAL Robotics Solutions Ltd.<br>
     Advanced Industrial Robotics<br>
-    www.chiral-robotics.com</small></p>
+    www.chiralrobotics.com</small></p>
   `;
 }
 

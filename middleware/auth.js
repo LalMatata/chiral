@@ -139,7 +139,7 @@ class Auth {
         await this.createUser({
           username: 'admin',
           password: 'ChiralAdmin123!',
-          email: 'admin@chiral-robotics.com',
+          email: 'admin@chiralrobotics.com',
           role: 'admin'
         });
         
