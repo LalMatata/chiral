@@ -7,6 +7,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+import { createServer } from 'http';
+import { Server as SocketServer } from 'socket.io';
+
+import './database/db.js';
+import Lead from './database/models/Lead.js';
+import FollowUp from './database/models/FollowUp.js';
+import EmailQueue from './services/EmailQueue.js';
+import Auth from './middleware/auth.js';
+
+import authRoutes from './routes/auth.js';
+import leadRoutes from './routes/leads.js';
 
 dotenv.config();
 
@@ -14,14 +25,53 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const server = createServer(app);
+const io = new SocketServer(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 
-// Initialize Resend with API key (will be added to .env)
+// Initialize services
 const resend = new Resend(process.env.RESEND_API_KEY);
+const emailQueue = new EmailQueue();
+
+// Initialize default admin user
+Auth.initializeDefaultUser();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Rate limiting for contact form
+const contactFormAttempts = new Map();
+const rateLimitContact = (req, res, next) => {
+  const ip = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const maxAttempts = 5;
+
+  if (!contactFormAttempts.has(ip)) {
+    contactFormAttempts.set(ip, []);
+  }
+
+  const attempts = contactFormAttempts.get(ip);
+  const recentAttempts = attempts.filter(time => now - time < windowMs);
+
+  if (recentAttempts.length >= maxAttempts) {
+    return res.status(429).json({
+      success: false,
+      error: 'Too many contact form submissions. Please try again later.'
+    });
+  }
+
+  recentAttempts.push(now);
+  contactFormAttempts.set(ip, recentAttempts);
+  next();
+};
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -189,40 +239,64 @@ const brochureUpload = multer({
 // Serve uploaded files statically
 app.use('/uploads', express.static(uploadsDir));
 
-// Contact form endpoint
-app.post('/api/contact', validateContactForm, async (req, res) => {
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/leads', leadRoutes);
+
+// Enhanced Contact form endpoint
+app.post('/api/contact', rateLimitContact, validateContactForm, async (req, res) => {
   try {
-    const formData = req.body;
+    const formData = {
+      ...req.body,
+      timestamp: new Date().toISOString(),
+      ip: req.ip || req.connection.remoteAddress,
+      userAgent: req.get('User-Agent'),
+      source: req.body.source || req.get('Referer') || 'direct',
+      utmSource: req.body.utm_source,
+      utmMedium: req.body.utm_medium,
+      utmCampaign: req.body.utm_campaign
+    };
     
-    // Store lead locally
-    const leads = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
-    leads.push({
-      ...formData,
-      receivedAt: new Date().toISOString()
-    });
-    fs.writeFileSync(leadsFile, JSON.stringify(leads, null, 2));
+    // Create lead in database
+    const lead = Lead.create(formData);
     
-    // If Resend API key is configured, send emails
+    // Queue emails for processing
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key_here') {
-      // Email to sales team
-      await resend.emails.send({
-        from: 'CHIRAL <noreply@chiral-robotics.com>',
-        to: process.env.SALES_EMAIL || 'sales@chiral-robotics.com',
-        subject: `New ${formData.formType === 'demo' ? 'Demo Request' : formData.formType === 'sales' ? 'Sales Inquiry' : 'Lead'}: ${formData.companyName}`,
-        html: formatEmailToSales(formData)
+      // Queue notification email to sales team
+      EmailQueue.create({
+        leadId: lead.id,
+        recipient: process.env.SALES_EMAIL || 'sales@chiral-robotics.com',
+        subject: `🚨 New ${formData.formType === 'demo' ? 'Demo Request' : formData.formType === 'sales' ? 'Sales Inquiry' : 'Lead'}: ${formData.companyName}`,
+        template: 'lead_notification',
+        data: { ...lead, inquiryType: formData.formType }
       });
       
-      // Auto-reply to prospect
-      await resend.emails.send({
-        from: 'CHIRAL <noreply@chiral-robotics.com>',
-        to: formData.email,
+      // Queue auto-reply to prospect  
+      EmailQueue.create({
+        leadId: lead.id,
+        recipient: formData.email,
         subject: 'Thank you for contacting CHIRAL Robotics',
-        html: formatAutoReply(formData)
+        template: 'welcome',
+        data: { ...lead, inquiryType: formData.formType }
+      });
+
+      // Create initial follow-up task
+      FollowUp.create({
+        leadId: lead.id,
+        action: 'Initial contact - respond within 2 hours',
+        notes: 'New lead from website contact form',
+        scheduledFor: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString() // 2 hours from now
       });
     } else {
       console.log('Resend API key not configured - emails not sent');
-      console.log('Lead saved locally:', formData);
+      console.log('Lead created:', lead);
     }
+
+    // Emit real-time notification to admin dashboard
+    io.emit('new_lead', {
+      lead,
+      message: `New ${formData.formType} inquiry from ${formData.companyName}`
+    });
     
     res.json({ success: true, message: 'Form submitted successfully' });
   } catch (error) {
@@ -574,7 +648,49 @@ app.get('/api/brochures/category/:category', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Resend API Key configured: ${!!process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key_here'}`);
+// Socket.IO connection handling
+io.on('connection', (socket) => {
+  console.log('Admin dashboard connected:', socket.id);
+  
+  socket.on('authenticate', (token) => {
+    const user = Auth.verifyToken(token);
+    if (user) {
+      socket.join('authenticated');
+      socket.user = user;
+      console.log(`User ${user.username} authenticated on socket ${socket.id}`);
+      
+      // Send initial dashboard data
+      const stats = Lead.getStatistics();
+      const pendingFollowUps = FollowUp.findPending();
+      
+      socket.emit('dashboard_data', {
+        stats,
+        pending_follow_ups: pendingFollowUps.length,
+        recent_leads: Lead.findAll({ limit: 5 })
+      });
+    } else {
+      socket.emit('auth_error', 'Invalid token');
+    }
+  });
+
+  socket.on('mark_notification_read', (notificationId) => {
+    // Handle notification read status
+    console.log(`Notification ${notificationId} marked as read by ${socket.user?.username}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected:', socket.id);
+  });
+});
+
+// Start email queue processing
+emailQueue.startCronJobs();
+
+// Start server
+server.listen(PORT, () => {
+  console.log(`🚀 CHIRAL Email Management System running on http://localhost:${PORT}`);
+  console.log(`📧 Resend API Key configured: ${!!process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key_here'}`);
+  console.log(`🔐 Default admin login: admin / ChiralAdmin123!`);
+  console.log(`📊 Admin Dashboard: http://localhost:${PORT}/admin`);
+  console.log(`📋 API Documentation: http://localhost:${PORT}/api`);
 });
