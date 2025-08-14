@@ -21,6 +21,16 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version || '1.0.0',
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // JSON error handling middleware
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
@@ -210,6 +220,106 @@ app.get('/api/leads', (req, res) => {
   } catch (err) {
     console.error('Error retrieving leads:', err);
     res.status(500).json({ error: 'Failed to retrieve leads' });
+  }
+});
+
+// Analytics metrics endpoint
+app.get('/api/analytics/metrics', (req, res) => {
+  try {
+    const leads = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
+    const newsletters = JSON.parse(fs.readFileSync(newsletterFile, 'utf8') || '[]');
+    
+    // Calculate metrics
+    const today = new Date().toDateString();
+    const todayLeads = leads.filter(lead => new Date(lead.timestamp).toDateString() === today);
+    
+    // Calculate conversion rate (demo requests / total leads)
+    const demoRequests = leads.filter(lead => lead.formType === 'demo');
+    const conversionRate = leads.length > 0 ? Math.round((demoRequests.length / leads.length) * 100) : 0;
+    
+    // Calculate total pipeline value (Israeli Shekels)
+    const totalValue = leads.reduce((sum, lead) => {
+      if (lead.formType === 'demo') return sum + 5000;
+      if (lead.formType === 'quote') return sum + 2500;
+      return sum + 1000;
+    }, 0);
+    
+    res.json({
+      totalLeads: leads.length,
+      todayLeads: todayLeads.length,
+      conversionRate,
+      totalValue,
+      newsletterSubscribers: newsletters.length,
+      lastUpdated: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('Error calculating metrics:', err);
+    res.status(500).json({ error: 'Failed to calculate metrics' });
+  }
+});
+
+// Lead analytics by source
+app.get('/api/analytics/sources', (req, res) => {
+  try {
+    const leads = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
+    
+    // Group leads by source
+    const sourceData = leads.reduce((acc, lead) => {
+      const source = lead.source || 'direct';
+      if (!acc[source]) {
+        acc[source] = { count: 0, value: 0 };
+      }
+      acc[source].count++;
+      acc[source].value += lead.formType === 'demo' ? 5000 : 
+                          lead.formType === 'quote' ? 2500 : 1000;
+      return acc;
+    }, {});
+    
+    // Convert to array format
+    const sources = Object.entries(sourceData).map(([name, data]) => ({
+      name,
+      leads: data.count,
+      value: data.value,
+      percentage: Math.round((data.count / leads.length) * 100) || 0
+    })).sort((a, b) => b.leads - a.leads);
+    
+    res.json(sources);
+  } catch (err) {
+    console.error('Error getting source analytics:', err);
+    res.status(500).json({ error: 'Failed to get source analytics' });
+  }
+});
+
+// Daily leads trend
+app.get('/api/analytics/trend', (req, res) => {
+  try {
+    const leads = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
+    
+    // Group leads by date for last 30 days
+    const last30Days = Array.from({ length: 30 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      return date.toISOString().split('T')[0];
+    }).reverse();
+    
+    const trendData = last30Days.map(date => {
+      const dayLeads = leads.filter(lead => 
+        lead.timestamp && lead.timestamp.startsWith(date)
+      );
+      return {
+        date,
+        leads: dayLeads.length,
+        value: dayLeads.reduce((sum, lead) => {
+          return sum + (lead.formType === 'demo' ? 5000 : 
+                       lead.formType === 'quote' ? 2500 : 1000);
+        }, 0)
+      };
+    });
+    
+    res.json(trendData);
+  } catch (err) {
+    console.error('Error getting trend analytics:', err);
+    res.status(500).json({ error: 'Failed to get trend analytics' });
   }
 });
 
