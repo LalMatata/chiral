@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ArrowRight, CheckCircle, Download, Play, Star } from 'lucide-react'
-import { useLanguage } from '../../contexts/LanguageContext'
+import { ArrowRight, CheckCircle, Star } from 'lucide-react'
 
 // Import images
 import x30Hero from '../../assets/images/products/x30-hero.png'
@@ -17,34 +16,27 @@ import lite3Detailed from '../../assets/images/products/lite3-detailed.jpg'
 
 const ProductDetail = () => {
   const { model } = useParams()
-  const { t, isRTL } = useLanguage()
   const [selectedImage, setSelectedImage] = useState(0)
 
   const productData = {
     x30: {
       name: 'X30 Series',
       tagline: 'Industrial Flagship',
-      description: 'The X30 Series represents the ultimate in industrial quadruped robotics, combining exceptional durability, advanced AI capabilities, and comprehensive sensor integration. Designed for the most challenging industrial environments, the X30 delivers uncompromising performance in applications where reliability is non-negotiable.',
+      description: 'The X30 Series represents the ultimate in industrial quadruped robotics, combining exceptional durability, advanced AI capabilities, and comprehensive sensor integration.',
       images: [x30Hero, x30Action],
       specifications: {
-        'Physical Dimensions': {
+        'Physical': {
           'Dimensions': '1000×695×470mm',
           'Weight': '56kg (including battery)',
-          'Protection Rating': 'IP67',
-          'Operating Temperature': '-20°C to 55°C'
+          'Protection': 'IP67',
+          'Temperature': '-20°C to 55°C'
         },
         'Performance': {
-          'Maximum Speed': '≥4m/s',
+          'Max Speed': '≥4m/s',
           'Slope Capability': '≤45°',
           'Obstacle Height': '≥20cm',
-          'Battery Endurance': '2.5-4 hours',
-          'Maximum Range': '≥10km'
-        },
-        'Communication': {
-          'Connectivity': 'Ethernet',
-          'Power Output': '72V',
-          'Data Transmission': 'Real-time streaming',
-          'Control': 'Autonomous with manual override'
+          'Endurance': '2.5-4 hours',
+          'Range': '≥10km'
         }
       },
       features: [
@@ -53,11 +45,7 @@ const ProductDetail = () => {
         'Advanced mobility (45° slopes, 20cm obstacles)',
         'Extended endurance (2.5-4 hours)',
         'High-speed operation (4m/s)',
-        'Industrial-grade reliability',
-        'Comprehensive sensor integration',
-        'Real-time data transmission',
-        'Autonomous navigation system',
-        'Emergency response capabilities'
+        'Industrial-grade reliability'
       ],
       applications: [
         'Power plant inspections',
@@ -65,43 +53,27 @@ const ProductDetail = () => {
         'Mining operations',
         'Emergency response',
         'Critical infrastructure security',
-        'Environmental monitoring in extreme conditions',
-        'Hazardous area surveillance',
-        'Equipment condition monitoring'
-      ],
-      benefits: [
-        '75% reduction in human exposure to hazardous environments',
-        '40% improvement in inspection frequency and coverage',
-        '25% reduction in unplanned maintenance events',
-        'Enhanced compliance with safety regulations',
-        'Significant cost savings in operational expenses',
-        'Improved worker safety and risk management'
+        'Environmental monitoring'
       ]
     },
     x20: {
       name: 'X20 Series',
       tagline: 'Patrol & Inspection Specialist',
-      description: 'The X20 Series is specifically engineered for comprehensive industrial patrol and inspection operations. Its balanced combination of mobility, payload capacity, and advanced perception systems makes it the ideal choice for routine monitoring, security patrols, and detailed facility inspections across Israel\'s industrial sector.',
+      description: 'The X20 Series is engineered for comprehensive industrial patrol and inspection operations with exceptional mobility and payload capacity.',
       images: [x20Main, x20Terrain],
       specifications: {
-        'Physical Dimensions': {
+        'Physical': {
           'Dimensions': '950×470×700mm',
           'Weight': '53kg',
-          'Maximum Load': '20kg',
-          'Protection Rating': 'IP66'
+          'Max Load': '20kg',
+          'Protection': 'IP66'
         },
         'Performance': {
-          'Maximum Speed': '≥4m/s',
+          'Max Speed': '≥4m/s',
           'Slope Capability': '≥30°',
           'Obstacle Height': '≥20cm',
-          'Battery Endurance': '2-4 hours',
-          'Maximum Range': '15km'
-        },
-        'Features': {
-          'Navigation': 'Autonomous with obstacle avoidance',
-          'Sensor Integration': 'Modular design',
-          'Weather Resistance': 'All-weather operation',
-          'Deployment': 'Flexible configuration options'
+          'Endurance': '2-4 hours',
+          'Range': '15km'
         }
       },
       features: [
@@ -110,11 +82,7 @@ const ProductDetail = () => {
         'Weather resistance (IP66)',
         'Extended operational range (15km)',
         'Modular sensor integration',
-        'Autonomous navigation',
-        'Real-time monitoring',
-        'Flexible deployment options',
-        'Advanced perception systems',
-        'Emergency alert capabilities'
+        'Autonomous navigation'
       ],
       applications: [
         'Industrial facility patrols',
@@ -122,42 +90,26 @@ const ProductDetail = () => {
         'Security surveillance',
         'Hazard detection',
         'Maintenance support',
-        'Emergency response coordination',
-        'Perimeter monitoring',
-        'Asset tracking and management'
-      ],
-      benefits: [
-        '60% improvement in hazardous area inspection coverage',
-        '50% reduction in safety incidents during inspection activities',
-        '30% improvement in early detection of equipment anomalies',
-        'Enhanced regulatory compliance documentation',
-        '24/7 autonomous patrol capabilities',
-        'Reduced security personnel exposure to outdoor conditions'
+        'Emergency response coordination'
       ]
     },
     lite3: {
       name: 'Lite3 Series',
       tagline: 'Advanced Research Platform',
-      description: 'The Lite3 Series provides an accessible entry point into advanced quadruped robotics while maintaining sophisticated capabilities essential for research, development, and specialized applications. Its compact design and advanced features make it ideal for educational institutions, research facilities, and innovative industrial applications.',
+      description: 'The Lite3 Series provides an accessible entry point into advanced quadruped robotics for research, development, and specialized applications.',
       images: [lite3Main, lite3Detailed],
       specifications: {
-        'Physical Dimensions': {
+        'Physical': {
           'Dimensions': '610×370×406mm',
           'Weight': '12kg (including battery)',
           'Walking Load': '5kg',
           'Stair Climbing': '18cm'
         },
         'Performance': {
-          'Maximum Speed': '2.5m/s',
+          'Max Speed': '2.5m/s',
           'Slope Capability': '40°',
-          'Battery Endurance': '1.5-2 hours',
-          'Maximum Range': '5km'
-        },
-        'Development': {
-          'SDK': 'Motion control SDK included',
-          'APIs': 'Perception APIs available',
-          'Programming': 'Sample code provided',
-          'Perception': 'Front/rear obstacle detection, visual following'
+          'Endurance': '1.5-2 hours',
+          'Range': '5km'
         }
       },
       features: [
@@ -166,11 +118,7 @@ const ProductDetail = () => {
         'Compact design (12kg lightweight)',
         'Steep slope capability (40°)',
         'Comprehensive development platform',
-        'SDK and API access',
-        'Educational support',
-        'Research-friendly architecture',
-        'Customizable sensor packages',
-        'Open development environment'
+        'SDK and API access'
       ],
       applications: [
         'Research and development',
@@ -178,17 +126,7 @@ const ProductDetail = () => {
         'Indoor inspections',
         'Prototype development',
         'Algorithm testing',
-        'Academic research',
-        'Innovation projects',
-        'Technology demonstrations'
-      ],
-      benefits: [
-        'Accelerated research project timelines',
-        'Enhanced student learning experiences',
-        'Multiple published research opportunities',
-        'Successful technology transfer initiatives',
-        'Reduced development costs',
-        'Flexible customization options'
+        'Academic research'
       ]
     }
   }
@@ -289,37 +227,49 @@ const ProductDetail = () => {
 
             {/* CTA Buttons */}
             <div className="space-y-4 pt-6">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="flex-1" asChild>
-                  <Link to="/contact">
-                    {t('nav.requestDemo')}
-                    <ArrowRight className={`h-5 w-5 ${isRTL ? 'mr-2 ml-0' : 'ml-2'}`} />
-                  </Link>
+              <Button 
+                size="lg" 
+                className="w-full" 
+                onClick={() => {
+                  // Track quote request
+                  if (window.trackQuoteRequest) {
+                    window.trackQuoteRequest(product.name)
+                  }
+                  if (window.fbTrackLead) {
+                    window.fbTrackLead(2500)
+                  }
+                  if (window.linkedinTrackLead) {
+                    window.linkedinTrackLead()
+                  }
+                  // Redirect to contact with product pre-selected
+                  window.location.href = `/contact?product=${model}&type=quote`
+                }}
+              >
+                Get Quick Quote
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+              <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" size="lg" asChild>
+                  <Link to={`/contact?product=${model}&type=demo`}>Request Demo</Link>
                 </Button>
-                <Button variant="outline" size="lg" className="flex-1">
-                  <Download className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                  Download Specs
+                <Button variant="outline" size="lg" asChild>
+                  <Link to={`/contact?product=${model}&type=info`}>Get Details</Link>
                 </Button>
               </div>
-              <Button variant="ghost" size="lg" className="w-full">
-                <Play className={`h-5 w-5 ${isRTL ? 'ml-2 mr-0' : 'mr-2'}`} />
-                Watch Demo Video
-              </Button>
             </div>
           </div>
         </div>
 
         {/* Detailed Information Tabs */}
         <Tabs defaultValue="specifications" className="mb-20">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="specifications">{t('products.specifications')}</TabsTrigger>
-            <TabsTrigger value="applications">{t('products.applications')}</TabsTrigger>
-            <TabsTrigger value="benefits">Benefits</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="specifications">Specifications</TabsTrigger>
+            <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="support">Support</TabsTrigger>
           </TabsList>
 
           <TabsContent value="specifications" className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {Object.entries(product.specifications).map(([category, specs]) => (
                 <Card key={category}>
                   <CardHeader>
@@ -355,21 +305,6 @@ const ProductDetail = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="benefits" className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {product.benefits.map((benefit, index) => (
-                <Card key={index}>
-                  <CardContent className="pt-6">
-                    <div className="flex items-start space-x-3">
-                      <CheckCircle className="h-5 w-5 text-primary mt-0.5" />
-                      <span className="text-muted-foreground">{benefit}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
           <TabsContent value="support" className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Card>
@@ -392,10 +327,6 @@ const ProductDetail = () => {
                     <li className="flex items-center space-x-2">
                       <CheckCircle className="h-4 w-4 text-primary" />
                       <span className="text-sm">Remote diagnostics</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">Software updates</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -422,10 +353,6 @@ const ProductDetail = () => {
                       <CheckCircle className="h-4 w-4 text-primary" />
                       <span className="text-sm">Safety protocols training</span>
                     </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="text-sm">Advanced applications workshop</span>
-                    </li>
                   </ul>
                 </CardContent>
               </Card>
@@ -433,23 +360,23 @@ const ProductDetail = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Related Products */}
+        {/* CTA Section */}
         <div className="text-center bg-muted/50 rounded-2xl p-12">
           <h2 className="text-3xl font-bold text-foreground mb-6">
-            Interested in Other Solutions?
+            Ready to Learn More?
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Explore our complete range of quadruped robotics solutions designed for different applications and requirements.
+            Contact us for detailed information, pricing, and to discuss your specific requirements.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link to="/products">
-                View All Products
-                <ArrowRight className={`h-5 w-5 ${isRTL ? 'mr-2 ml-0' : 'ml-2'}`} />
+              <Link to="/contact">
+                Get Information
+                <ArrowRight className="h-5 w-5 ml-2" />
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <Link to="/contact">{t('common.contactUs')}</Link>
+              <Link to="/products">View All Products</Link>
             </Button>
           </div>
         </div>
@@ -459,4 +386,3 @@ const ProductDetail = () => {
 }
 
 export default ProductDetail
-

@@ -1,0 +1,127 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Development Commands
+
+### Frontend (React + Vite)
+- **Start development server**: `pnpm run dev`
+- **Build for production**: `pnpm run build`
+- **Preview production build**: `pnpm run preview`
+- **Lint code**: `pnpm run lint`
+
+### Backend (Flask)
+- **Start backend server**: `cd backend && python app.py`
+- **Install backend dependencies**: `cd backend && pip install -r requirements.txt`
+
+### Testing
+- **Frontend validation**: `node frontend-validation-proof.js`
+- **Security testing**: `node security_test.js`
+- **Analytics testing**: `node analytics_test.js`
+- **Comprehensive validation**: `./validation-test-results.sh`
+
+### Package Management
+- **Install dependencies**: `pnpm install`
+- **Add new dependency**: `pnpm add <package-name>`
+- **Add dev dependency**: `pnpm add -D <package-name>`
+
+## Architecture Overview
+
+### Frontend Structure
+- **React 19.1.0** with **Vite 6.3.5** build system
+- **React Router DOM 7.6.1** for client-side routing
+- **Tailwind CSS 4.1.7** with **Shadcn/UI** component library
+- **Bilingual support** with context-based language switching (English/Hebrew)
+- **RTL layout support** for Hebrew content
+
+### Key Frontend Components
+- `src/App.jsx`: Main application with routing setup
+- `src/components/Header.jsx`: Navigation with language toggle
+- `src/components/Footer.jsx`: Site footer with contact links
+- `src/components/pages/`: Page components (Home, Products, ProductDetail, Applications, About, Contact)
+- `src/components/ui/`: Reusable Shadcn/UI components
+- `src/components/Analytics.jsx`: Analytics tracking component
+
+### Backend Structure
+- **Flask** REST API with **CORS** enabled
+- **Lead management** with JSON file storage (`backend/leads.json`)
+- **Email notifications** via SMTP (Gmail)
+- **Docker** containerization support
+
+### Language Context System
+The bilingual system uses React Context to manage:
+- Dynamic language switching (English/Hebrew)
+- RTL/LTR layout toggling
+- Localized content for all pages
+- URL parameter preservation across language changes
+
+### Product Data Structure
+Products are defined with:
+- `id`, `name`, `shortName` for routing
+- Bilingual `description`, `features`, `specifications`
+- `applications` array for use cases
+- `pricing` information
+- Image paths and technical details
+
+### Routing System
+- `/`: Homepage
+- `/products`: Product catalog
+- `/products/:productId`: Individual product pages (x30, x20, lite3)
+- `/applications`: Industry applications showcase
+- `/about`: Company information
+- `/contact`: Contact forms and information
+
+## Component Patterns
+
+### Language Integration
+All components use the `useLanguage()` hook to access:
+- `language`: Current language ('en' or 'he')
+- `content`: Localized content object
+- `isRTL`: Boolean for RTL layout
+- `setLanguage()`: Function to change language
+
+### Responsive Design
+Components use Tailwind responsive classes:
+- Mobile-first approach
+- Breakpoints: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+- RTL-aware spacing and layout
+
+### Form Handling
+Contact forms use:
+- React Hook Form with Zod validation
+- Shadcn/UI form components
+- Backend API integration for lead capture
+- Error handling and success states
+
+## Development Notes
+
+### File Organization
+- **Components**: Organized by type (pages/, ui/)
+- **Assets**: Images categorized by purpose (products/, applications/, company/)
+- **Contexts**: Language management and other global state
+- **Hooks**: Custom React hooks (mobile detection, etc.)
+
+### Styling Approach
+- **Tailwind CSS** for utility-first styling
+- **CSS custom properties** for theme colors
+- **Component-specific styles** in individual component files
+- **RTL support** using Tailwind's built-in RTL utilities
+
+### State Management
+- **React Context** for global state (language)
+- **Local component state** with hooks
+- **URL state** for routing and language persistence
+
+### Testing Strategy
+The codebase includes comprehensive testing:
+- Frontend validation tests
+- Security vulnerability testing  
+- Analytics integration testing
+- Performance and load testing
+- Cross-browser compatibility testing
+
+### Deployment
+- **Production build**: Creates optimized static files in `dist/`
+- **Backend deployment**: Uses Docker with nginx reverse proxy
+- **Static hosting**: Frontend can be deployed to any static host
+- **Environment variables**: Backend uses environment variables for email configuration
