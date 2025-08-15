@@ -40,31 +40,93 @@ const content = {
         { value: '99.9%', label: 'Uptime Reliability', trend: 'Industry Leading' }
       ],
       products: {
-        title: 'Explore Our Products',
-        subtitle: 'Each robot in our lineup is meticulously engineered to deliver exceptional performance in specific industrial applications.',
+        title: 'Choose the Right Robotic Solution for Your Needs',
+        subtitle: 'CHIRAL offers three distinct product lines, each engineered to address specific operational requirements and budget considerations.',
         items: [
           {
             title: 'X30 Series',
             subtitle: 'Industrial Flagship',
-            description: 'The pinnacle of industrial quadruped robotics, engineered for the most demanding operational environments.',
-            badge: 'Most Advanced',
-            features: ['IP67 Protection', '4m/s Max Speed', '2.5-4h Endurance', '10km Range']
+            description: 'The pinnacle of industrial quadruped robotics, engineered specifically for the most demanding operational environments.',
+            badge: 'Most Popular',
+            features: [
+              'Extreme weather operation (-20°C to 55°C)',
+              'Superior IP67 protection rating',
+              'Advanced mobility (45° slopes, 20cm obstacles)',
+              'Extended endurance (2.5-4 hours)'
+            ],
+            specs: {
+              maxSpeed: '≥4m/s',
+              slopeCapability: '≤45°',
+              protectionRating: 'IP67',
+              endurance: '2.5-4h',
+              payload: 'High',
+              range: '≥10km',
+              primaryUse: 'Industrial'
+            },
+            pricing: 'Contact for Pricing'
           },
           {
             title: 'X20 Series', 
-            subtitle: 'Patrol & Inspection',
-            description: 'Designed for comprehensive industrial patrol and inspection operations with exceptional mobility.',
-            badge: 'Best Seller',
-            features: ['20kg Payload', 'IP66 Protection', '15km Range', 'All-Terrain']
+            subtitle: 'Patrol & Inspection Specialist',
+            description: 'Designed for comprehensive industrial patrol and inspection operations with exceptional mobility and payload capacity.',
+            badge: 'Best Value',
+            features: [
+              'All-terrain capability (30° slopes)',
+              'Substantial payload capacity (20kg)',
+              'Weather resistance (IP66)',
+              'Extended operational range (15km)'
+            ],
+            specs: {
+              maxSpeed: '≥4m/s',
+              slopeCapability: '≥30°',
+              protectionRating: 'IP66',
+              endurance: '2-4h',
+              payload: '20kg',
+              range: '15km',
+              primaryUse: 'Patrol/Inspection'
+            },
+            pricing: 'Contact for Pricing'
           },
           {
             title: 'Lite3 Series',
-            subtitle: 'Research Platform', 
-            description: 'An accessible entry point into advanced robotics for research institutions and smaller operations.',
-            badge: 'Entry Level',
-            features: ['12kg Weight', '40° Slope', 'SDK Included', 'Research Platform']
+            subtitle: 'Advanced Research Platform', 
+            description: 'An accessible entry point into advanced quadruped robotics while maintaining sophisticated capabilities for research and development.',
+            badge: 'Research Ready',
+            features: [
+              'Enhanced agility (50% increased joint torque)',
+              'Advanced algorithms and motion control',
+              'Compact design (12kg lightweight)',
+              'Steep slope capability (40°)'
+            ],
+            specs: {
+              maxSpeed: '2.5m/s',
+              slopeCapability: '40°',
+              protectionRating: 'Standard',
+              endurance: '1.5-2h',
+              payload: '5kg',
+              range: '5km',
+              primaryUse: 'Research/Education'
+            },
+            pricing: 'Contact for Pricing'
           }
-        ]
+        ],
+        comparison: {
+          title: 'Product Comparison',
+          subtitle: 'Compare key specifications across our product lineup',
+          features: [
+            { name: 'Max Speed', x30: '≥4m/s', x20: '≥4m/s', lite3: '2.5m/s' },
+            { name: 'Slope Capability', x30: '≤45°', x20: '≥30°', lite3: '40°' },
+            { name: 'Protection Rating', x30: 'IP67', x20: 'IP66', lite3: 'Standard' },
+            { name: 'Endurance', x30: '2.5-4h', x20: '2-4h', lite3: '1.5-2h' },
+            { name: 'Payload', x30: 'High', x20: '20kg', lite3: '5kg' },
+            { name: 'Range', x30: '≥10km', x20: '15km', lite3: '5km' },
+            { name: 'Primary Use', x30: 'Industrial', x20: 'Patrol/Inspection', lite3: 'Research/Education' }
+          ]
+        },
+        support: {
+          title: 'Need Help Choosing the Right Solution?',
+          subtitle: 'Our experts are ready to help you select the perfect robotic solution for your specific needs and requirements.'
+        }
       },
       applications: {
         title: 'Transforming Industries',
@@ -99,29 +161,29 @@ const content = {
     contact: {
       hero: {
         tagline: 'Get In Touch',
-        title: 'Start Your Robotics Journey',
-        subtitle: 'Tell us about your project and discover how CHIRAL\'s advanced robotic solutions can transform your operations.'
+        title: 'Connect with CHIRAL - Your Robotic Solutions Partner',
+        subtitle: 'Our team of experts is ready to help you explore how advanced quadruped robotics can transform your operations.'
       },
       info: [
         {
+          title: 'Headquarters',
+          value: 'CHIRAL Robotics Solutions Ltd.\nTechnology Park, Tel Aviv, Israel\nBuilding 15, Floor 3',
+          description: 'Our main office and demonstration center'
+        },
+        {
           title: 'Phone',
-          value: '+1 (555) 123-4567',
-          description: 'Mon-Fri 9am-6pm EST'
+          value: 'Main: +972-3-XXX-XXXX\nSales: +972-3-XXX-XXXX\nSupport: +972-3-XXX-XXXX\nEmergency: +972-5X-XXX-XXXX (24/7)',
+          description: 'Multiple contact lines for different needs'
         },
         {
           title: 'Email',
-          value: 'info@chiral-robotics.com',
-          description: 'We respond within 2 hours'
+          value: 'info@chiral-robotics.co.il\nsales@chiral-robotics.co.il\nsupport@chiral-robotics.co.il\npartnerships@chiral-robotics.co.il',
+          description: 'Specialized email addresses for different inquiries'
         },
         {
-          title: 'Location',
-          value: 'Tel Aviv, Israel',
-          description: 'Serving customers globally'
-        },
-        {
-          title: 'Response Time',
-          value: '< 24 hours',
-          description: 'Guaranteed response time'
+          title: 'Business Hours',
+          value: 'Sunday - Thursday: 8:00 AM - 6:00 PM\nFriday: 8:00 AM - 2:00 PM\nSaturday: Closed\nEmergency Support: 24/7',
+          description: 'Our operating schedule and availability'
         }
       ],
       form: {
@@ -261,27 +323,154 @@ const content = {
     // About Page
     about: {
       hero: {
-        title: 'About CHIRAL',
-        subtitle: 'Leading the future of industrial automation with cutting-edge quadruped robotics technology.'
+        title: 'CHIRAL - Pioneering Robotic Excellence in Israel',
+        subtitle: 'Founded with a vision to bring the world\'s most advanced quadruped robotic technologies to Israeli industry.'
+      },
+      story: {
+        title: 'Our Story',
+        content: 'CHIRAL was founded with a vision to bring the world\'s most advanced quadruped robotic technologies to Israeli industry. Recognizing the unique challenges and opportunities within Israel\'s industrial landscape, our founders assembled a team of robotics experts, industry specialists, and local market professionals.\n\nThrough strategic partnerships with leading global robotics manufacturers and deep collaboration with Israeli industrial leaders, CHIRAL has established itself as the premier provider of quadruped robotic solutions in Israel. Our success is built on a foundation of technical excellence, comprehensive support services, and unwavering commitment to customer success.'
       },
       mission: {
         title: 'Our Mission',
-        content: 'To revolutionize industrial operations through advanced robotic solutions that enhance safety, efficiency, and reliability in the world\'s most challenging environments.'
+        content: 'CHIRAL is dedicated to transforming Israeli industry through the introduction and support of advanced quadruped robotic technologies.'
+      },
+      vision: {
+        title: 'Our Vision',
+        content: 'To establish Israel as a global leader in the adoption and application of advanced quadruped robotics across critical industrial sectors, while setting new standards for innovation, reliability, and customer success in the robotics industry.'
       },
       values: [
         {
+          title: 'Excellence',
+          description: 'We are committed to delivering the highest quality robotic solutions and support services.'
+        },
+        {
           title: 'Innovation',
-          description: 'Pushing the boundaries of robotic technology to solve complex industrial challenges.'
+          description: 'We embrace cutting-edge technologies and innovative approaches that deliver superior value.'
         },
         {
           title: 'Reliability',
-          description: 'Engineering robust solutions that perform consistently in demanding operational environments.'
+          description: 'We ensure that our solutions consistently meet the highest standards of reliability and performance.'
         },
         {
-          title: 'Safety',
-          description: 'Prioritizing worker safety and operational security in every solution we develop.'
+          title: 'Partnership',
+          description: 'We view our relationships with customers as true partnerships, working collaboratively.'
         }
-      ]
+      ],
+      team: {
+        title: 'Expert Team Driving Robotic Innovation',
+        subtitle: 'Our professionals combine deep technical knowledge with extensive industry experience.',
+        members: [
+          {
+            name: 'David Chen',
+            role: 'Chief Executive Officer',
+            education: 'M.S. in Robotics Engineering from Technion, MBA from Tel Aviv University',
+            experience: '15+ years in robotics and automation',
+            expertise: ['Strategic Planning', 'Technology Integration', 'International Business']
+          },
+          {
+            name: 'Dr. Sarah Goldstein',
+            role: 'Chief Technology Officer',
+            education: 'Ph.D. in Computer Science from Hebrew University',
+            experience: 'Extensive research in autonomous systems',
+            expertise: ['Autonomous Navigation', 'Sensor Integration', 'Software Development']
+          },
+          {
+            name: 'Michael Rosenberg',
+            role: 'VP of Operations',
+            education: 'B.S. in Industrial Engineering from Ben-Gurion University',
+            experience: 'Operations management in Israeli industry',
+            expertise: ['Operations Management', 'Supply Chain', 'Customer Support']
+          },
+          {
+            name: 'Rachel Aviv',
+            role: 'VP of Sales & Marketing',
+            education: 'MBA from IDC Herzliya',
+            experience: 'B2B technology sales expertise',
+            expertise: ['B2B Sales', 'Market Development', 'Customer Relations']
+          }
+        ]
+      },
+      journey: {
+        title: 'Our Journey',
+        milestones: [
+          {
+            year: '2019',
+            title: 'Company Founded',
+            description: 'CHIRAL established with vision to bring advanced quadruped robotics to Israeli industry'
+          },
+          {
+            year: '2020',
+            title: 'Strategic Partnerships',
+            description: 'Established partnerships with leading global robotics manufacturers'
+          },
+          {
+            year: '2021',
+            title: 'First Deployments',
+            description: 'Completed pilot deployments in power utility and manufacturing sectors'
+          },
+          {
+            year: '2022',
+            title: 'Market Expansion',
+            description: 'Expanded operations across multiple industrial sectors'
+          },
+          {
+            year: '2023',
+            title: 'ISO Certification',
+            description: 'Achieved ISO 9001 certification for quality management'
+          },
+          {
+            year: '2024',
+            title: 'Market Leadership',
+            description: 'Established as Israel\'s leading provider of industrial quadruped robotics'
+          }
+        ]
+      },
+      impact: {
+        title: 'Our Impact',
+        stats: [
+          {
+            value: '50+',
+            label: 'Deployed Systems',
+            description: 'Robotic systems successfully deployed'
+          },
+          {
+            value: '25+',
+            label: 'Industrial Facilities',
+            description: 'Major facilities served across Israel'
+          },
+          {
+            value: '200+',
+            label: 'Trained Personnel',
+            description: 'Professionals trained on our systems'
+          },
+          {
+            value: '99.9%',
+            label: 'Uptime Reliability',
+            description: 'System availability and performance'
+          }
+        ]
+      },
+      certifications: {
+        title: 'Certifications & Compliance',
+        items: [
+          {
+            title: 'ISO 9001:2015',
+            description: 'Quality Management Systems'
+          },
+          {
+            title: 'ISO 14001',
+            description: 'Environmental Management'
+          },
+          {
+            title: 'Industrial Safety',
+            description: 'Compliance with safety standards'
+          },
+          {
+            title: 'Power Utility',
+            description: 'Specialized certifications for power applications'
+          }
+        ]
+      }
     },
     
     // Footer
