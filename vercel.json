@@ -3,7 +3,7 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "devCommand": "npm run dev",
-  "installCommand": "npm install --legacy-peer-deps --no-optional",
+  "installCommand": "npm install --legacy-peer-deps --no-optional --force",
   "git": {
     "deploymentEnabled": {
       "claude-code1": true,
