@@ -42,43 +42,29 @@ const Home = () => {
     setImageLoadingStates(prev => ({ ...prev, [imageKey]: loading }))
   }
 
-  const products = t('home.products.items').map((product, index) => ({
+  const productsData = t('home.products.items') || []
+  const products = productsData.map((product, index) => ({
     ...product,
     image: [x30Hero, x20Main, lite3Main][index],
     link: ['/products/x30', '/products/x20', '/products/lite3'][index],
     color: ['from-blue-600 to-cyan-500', 'from-purple-600 to-pink-500', 'from-green-600 to-teal-500'][index]
   }))
 
-  const stats = t('home.stats')
+  const stats = t('home.stats') || []
   
-  const applications = t('home.applications.items').map((app, index) => ({
+  const homeData = t('home') || {}
+  const applications = (homeData.applications?.items || []).map((app, index) => ({
     ...app,
     icon: [Zap, Shield, Settings][index],
     gradient: ['from-yellow-500 to-orange-500', 'from-red-500 to-pink-500', 'from-blue-500 to-purple-500'][index]
   }))
 
-  const AnimatedSection = ({ children, className = "" }) => {
-    const ref = useRef(null)
-    const isInView = useInView(ref, { once: true, amount: 0.3 })
-    
-    return (
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className={className}
-      >
-        {children}
-      </motion.div>
-    )
-  }
 
   return (
     <AnimatedPage>
       <div className="min-h-screen overflow-hidden">
         {/* Hero Section - Apple Style */}
-        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white">
+        <section ref={heroRef} className="relative bg-gradient-to-b from-gray-50 to-white">
           <motion.div 
             className="absolute inset-0 z-0"
             style={{ y: smoothHeroY, scale: heroScale }}
@@ -86,89 +72,90 @@ const Home = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white" />
           </motion.div>
           
-          <motion.div 
-            className="relative z-10 container-apple text-center space-y-8"
-            style={{ opacity: heroOpacity }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="space-y-6"
-            >
-              <motion.p 
-                className="text-sm font-semibold text-blue-600 tracking-wider uppercase"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.5 }}
+          <div className="container-apple">
+            <div className="pt-20 pb-8 text-center space-y-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.2 }}
+                className="space-y-6"
+                style={{ opacity: heroOpacity }}
               >
-                Advanced Quadruped Robotics
-              </motion.p>
+                <motion.p 
+                  className="text-sm font-semibold text-blue-600 tracking-wider uppercase"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                >
+                  Advanced Quadruped Robotics
+                </motion.p>
+                
+                <h1 className="text-display bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent">
+                  The Future of
+                  <br />
+                  Industrial Automation
+                </h1>
+                
+                <p className="text-body-large text-gray-600 max-w-3xl mx-auto">
+                  CHIRAL delivers cutting-edge robotic solutions engineered for the world's most demanding industrial environments. Experience unmatched performance, reliability, and intelligence.
+                </p>
+              </motion.div>
               
-              <h1 className="text-display bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent">
-                The Future of
-                <br />
-                Industrial Automation
-              </h1>
-              
-              <p className="text-body-large text-gray-600 max-w-3xl mx-auto">
-                CHIRAL delivers cutting-edge robotic solutions engineered for the world's most demanding industrial environments. Experience unmatched performance, reliability, and intelligence.
-              </p>
-            </motion.div>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
-            >
-              <Link 
-                to="/contact" 
-                className="btn-apple btn-apple-primary group"
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.8 }}
+                style={{ opacity: heroOpacity }}
               >
-                Get Started Today
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                to="/products" 
-                className="btn-apple btn-apple-secondary"
-              >
-                Explore Products
-              </Link>
-              <button className="btn-apple flex items-center gap-2 text-gray-700 hover:bg-gray-100">
-                <Play className="h-5 w-5 icon-secondary" />
-                Watch Demo
-              </button>
-            </motion.div>
-          </motion.div>
-          
-          {/* Hero Product Showcase */}
-          <motion.div 
-            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-6xl"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 1 }}
-          >
-            <div className="relative">
-              {imageLoadingStates['hero-x30'] && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <InlineLoading message="Loading hero image..." size="md" />
-                </div>
-              )}
-              <img
-                src={x30Hero}
-                alt="CHIRAL X30 Robot"
-                className="w-full h-auto object-contain"
-                onLoad={() => handleImageLoad('hero-x30')}
-                onError={() => handleImageError('hero-x30')}
-                onLoadStart={() => setImageLoading('hero-x30', true)}
-              />
+                <Link 
+                  to="/contact" 
+                  className="btn-apple btn-apple-primary group"
+                >
+                  Get Started Today
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  to="/products" 
+                  className="btn-apple btn-apple-secondary"
+                >
+                  Explore Products
+                </Link>
+                <button className="btn-apple flex items-center gap-2 text-gray-700 hover:bg-gray-100">
+                  <Play className="h-5 w-5 icon-secondary" />
+                  Watch Demo
+                </button>
+              </motion.div>
             </div>
-          </motion.div>
+            
+            {/* Hero Product Showcase */}
+            <motion.div 
+              className="flex justify-center pb-12"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 1 }}
+            >
+              <div className="max-w-4xl">
+                {imageLoadingStates['hero-x30'] && (
+                  <div className="flex items-center justify-center h-64">
+                    <InlineLoading message="Loading hero image..." size="md" />
+                  </div>
+                )}
+                <img
+                  src={x30Hero}
+                  alt="CHIRAL X30 Robot"
+                  className="w-full h-auto object-contain"
+                  onLoad={() => handleImageLoad('hero-x30')}
+                  onError={() => handleImageError('hero-x30')}
+                  onLoadStart={() => setImageLoading('hero-x30', true)}
+                />
+              </div>
+            </motion.div>
+          </div>
         </section>
 
         {/* Stats Section */}
-        <AnimatedSection className="section-padding bg-gray-50">
+        <div className="py-16 bg-gray-50">
           <div className="container-apple">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, index) => (
@@ -193,10 +180,10 @@ const Home = () => {
               ))}
             </div>
           </div>
-        </AnimatedSection>
+        </div>
 
         {/* Products Section - Apple Store Style */}
-        <AnimatedSection className="section-padding">
+        <div className="py-16">
           <div className="container-apple">
             <div className="text-center mb-16">
               <h2 className="text-headline mb-6">
@@ -280,10 +267,10 @@ const Home = () => {
               ))}
             </div>
           </div>
-        </AnimatedSection>
+        </div>
 
         {/* Applications Section */}
-        <AnimatedSection className="section-padding bg-gradient-to-b from-white to-gray-50">
+        <div className="py-16 bg-gradient-to-b from-white to-gray-50">
           <div className="container-apple">
             <div className="text-center mb-16">
               <h2 className="text-headline mb-6">
@@ -330,10 +317,10 @@ const Home = () => {
               ))}
             </div>
           </div>
-        </AnimatedSection>
+        </div>
 
         {/* CTA Section - Apple Style */}
-        <AnimatedSection className="section-padding bg-black text-white">
+        <div className="py-16 bg-black text-white">
           <div className="container-apple text-center space-y-8">
             <h2 className="text-headline">
               Ready to Transform Your Operations?
@@ -357,7 +344,7 @@ const Home = () => {
               </Link>
             </div>
           </div>
-        </AnimatedSection>
+        </div>
       </div>
     </AnimatedPage>
   )

@@ -15,10 +15,15 @@ import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 import Home from './components/pages/Home'
 import Products from './components/pages/Products'
+import SimpleProducts from './components/pages/SimpleProducts'
 import ProductDetail from './components/pages/ProductDetail'
+import DebugRouter from './components/pages/DebugRouter'
 import Applications from './components/pages/Applications'
 import About from './components/pages/About'
 import Contact from './components/pages/Contact'
+import TestPage from './components/pages/TestPage'
+import SimpleNavTest from './components/pages/SimpleNavTest'
+import DebugData from './components/pages/DebugData'
 import AdminDashboard from './components/admin/AdminDashboard'
 
 function AnimatedRoutes() {
@@ -41,14 +46,19 @@ function AnimatedRoutes() {
           showSpinner={true}
         />
       )}
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/products" element={<SimpleProducts />} />
+          <Route path="/products-simple" element={<SimpleProducts />} />
           <Route path="/products/:model" element={<ProductDetail />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/test" element={<TestPage />} />
+          <Route path="/debug" element={<DebugRouter />} />
+          <Route path="/simple-nav-test" element={<SimpleNavTest />} />
+          <Route path="/debug-data" element={<DebugData />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
       </AnimatePresence>
