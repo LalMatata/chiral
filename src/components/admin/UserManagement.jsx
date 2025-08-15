@@ -79,7 +79,7 @@ const UserManagement = () => {
           {
             id: 1,
             username: 'admin',
-            email: 'admin@chiral-robotics.com',
+            email: 'admin@chiralrobotics.com',
             role: 'admin',
             is_active: true,
             last_login: '2024-01-15T10:30:00Z',
@@ -88,7 +88,7 @@ const UserManagement = () => {
           {
             id: 2,
             username: 'sales_manager',
-            email: 'sales@chiral-robotics.com',
+            email: 'sales@chiralrobotics.com',
             role: 'manager',
             is_active: true,
             last_login: '2024-01-14T15:45:00Z',
@@ -97,7 +97,7 @@ const UserManagement = () => {
           {
             id: 3,
             username: 'sales_rep',
-            email: 'rep@chiral-robotics.com',
+            email: 'rep@chiralrobotics.com',
             role: 'sales',
             is_active: true,
             last_login: '2024-01-13T09:15:00Z',

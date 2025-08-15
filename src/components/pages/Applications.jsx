@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ArrowRight, Zap, Shield, Settings, Microscope } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import AnimatedPage from '../AnimatedPage'
 
-// Import images
+// Import different images for each application
 import industrialFacility from '../../assets/images/applications/industrial-facility.jpg'
+import intelIsrael from '../../assets/images/applications/intel-israel.jpg'
+import x30Action from '../../assets/images/products/x30-action.jpg'
+import lite3Main from '../../assets/images/products/lite3-main.png'
 
 const Applications = () => {
   const { t } = useLanguage()
@@ -16,104 +16,114 @@ const Applications = () => {
   const homeData = t('home')
   const applicationItems = homeData?.applications?.items || []
 
-  // Map icons for different applications
-  const iconMap = {
-    'Power & Utilities': Zap,
-    'Security & Surveillance': Shield, 
-    'Industrial Inspection': Settings,
-    'Research & Development': Microscope
-  }
-
-  const colorMap = {
-    'Power & Utilities': 'bg-yellow-500',
-    'Security & Surveillance': 'bg-blue-500',
-    'Industrial Inspection': 'bg-green-500', 
-    'Research & Development': 'bg-purple-500'
+  // Map different images for each application type
+  const imageMap = {
+    'Power & Utilities': industrialFacility,
+    'Security & Surveillance': intelIsrael,
+    'Industrial Inspection': x30Action,
+    'Research & Development': lite3Main,
+    // Hebrew titles
+    'חשמל ותשתיות': industrialFacility,
+    'אבטחה ומעקב': intelIsrael, 
+    'בדיקה תעשייתית': x30Action,
+    'מחקר ופיתוח': lite3Main
   }
 
   return (
     <AnimatedPage>
       <div className="min-h-screen py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-apple">
           {/* Header */}
-          <div className="text-center space-y-6 mb-16">
-            <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
+          <div className="text-center space-y-6 mb-20">
+            <h1 className="text-headline text-foreground">
               {applicationsData?.hero?.title || homeData?.applications?.title || 'Industry Applications'}
             </h1>
-            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            <p className="text-body-large text-muted-foreground max-w-4xl mx-auto leading-relaxed">
               {applicationsData?.hero?.subtitle || homeData?.applications?.subtitle || 'See how CHIRAL\'s robotic solutions are transforming operations across diverse industries worldwide.'}
             </p>
           </div>
 
-          {/* Applications Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+          {/* Applications Grid - Clean Design */}
+          <div className="space-y-16 mb-20">
             {applicationItems.map((app, index) => {
-              const IconComponent = iconMap[app.title] || Settings
-              const colorClass = colorMap[app.title] || 'bg-blue-500'
+              const isEven = index % 2 === 0
+              const backgroundImage = imageMap[app.title] || industrialFacility
               
               return (
-                <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300">
-                  <div className="relative h-64 overflow-hidden">
+                <div 
+                  key={index} 
+                  className={`relative overflow-hidden rounded-3xl min-h-[500px] flex items-center ${
+                    isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                  }`}
+                >
+                  {/* Background Image */}
+                  <div className="absolute inset-0">
                     <img
-                      src={industrialFacility}
+                      src={backgroundImage}
                       alt={app.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <div className={`p-2 ${colorClass} rounded-lg`}>
-                          <IconComponent className="h-6 w-6 text-white" />
-                        </div>
-                      </div>
-                      <h3 className="text-xl font-bold">{app.title}</h3>
-                    </div>
+                    <div className="absolute inset-0 bg-black/50" />
                   </div>
                   
-                  <CardHeader>
-                    <CardDescription className="text-base">
-                      {app.description}
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-6">
-                    {/* Features */}
-                    {app.features && (
-                      <div>
-                        <h4 className="font-semibold mb-3">Key Capabilities</h4>
-                        <div className="space-y-1">
+                  {/* Content */}
+                  <div className="relative z-10 w-full lg:w-1/2 p-12 lg:p-16 text-white">
+                    <div className={`max-w-lg ${isEven ? 'lg:ml-0' : 'lg:ml-auto lg:text-right'}`}>
+                      {/* Simple White Border Title */}
+                      <div className={`inline-block border-2 border-white px-6 py-3 mb-6 ${
+                        isEven ? '' : 'lg:ml-auto'
+                      }`}>
+                        <h2 className="text-title">
+                          {app.title}
+                        </h2>
+                      </div>
+                      
+                      {/* Description */}
+                      <p className="text-body-large text-white/90 mb-8 leading-relaxed">
+                        {app.description}
+                      </p>
+                      
+                      {/* Features with Simple White Text */}
+                      {app.features && (
+                        <div className="space-y-3">
                           {app.features.map((feature, i) => (
-                            <div key={i} className="text-sm text-muted-foreground">
-                              • {feature}
+                            <div 
+                              key={i} 
+                              className={`text-body text-white/90 font-medium ${
+                                isEven ? 'text-left' : 'lg:text-right'
+                              }`}
+                            >
+                              {feature}
                             </div>
                           ))}
                         </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Empty space for image visibility */}
+                  <div className="hidden lg:block lg:w-1/2"></div>
+                </div>
               )
             })}
           </div>
 
-          {/* CTA Section */}
-          <div className="text-center bg-muted/50 rounded-2xl p-12">
-            <h2 className="text-3xl font-bold text-foreground mb-6">
+          {/* CTA Section - Minimalist Style */}
+          <div className="text-center bg-gradient-to-br from-foreground to-foreground/80 rounded-3xl p-16 text-white">
+            <h2 className="text-headline mb-6">
               Ready to Transform Your Operations?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-body-large text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
               Discover how CHIRAL's robotic solutions can enhance safety, efficiency, and reliability in your specific application.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link to="/contact">
-                  Get Information
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/products">View Products</Link>
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link to="/contact" className="btn-apple bg-white text-black hover:bg-gray-100 group">
+                Get Information
+                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/products" className="btn-apple border border-white text-white hover:bg-white hover:text-black transition-all">
+                View Products
+              </Link>
             </div>
           </div>
         </div>

@@ -146,6 +146,11 @@ const content = {
             title: 'Industrial Inspection',
             description: 'Automated inspection solutions for manufacturing facilities and processing centers.',
             features: ['Quality Control', 'Safety Monitoring', 'Process Optimization']
+          },
+          {
+            title: 'Research & Development',
+            description: 'Advanced robotics platform for educational institutions and research organizations.',
+            features: ['Open SDK', 'Algorithm Development', 'Academic Research']
           }
         ]
       },
@@ -225,7 +230,6 @@ const content = {
           contactPerson: 'Your full name',
           role: 'Your role at the company',
           email: 'your.email@company.com',
-          phone: '+1 (555) 123-4567',
           location: 'City, State/Country',
           message: 'Please describe your project requirements, challenges, and how our robotic solutions can help...'
         },
@@ -493,12 +497,11 @@ const content = {
       },
       contact: {
         title: 'Contact',
-        email: 'info@chiral-robotics.com',
-        phone: '+1 (555) 123-4567',
+        email: 'info@chiralrobotics.com',
         address: 'Tel Aviv, Israel'
       },
       legal: {
-        copyright: '© 2024 CHIRAL Robotics Solutions Ltd. All rights reserved.',
+        copyright: '© 2025 CHIRAL Robotics Solutions Ltd. All rights reserved.',
         links: ['Privacy Policy', 'Terms of Service', 'Cookie Policy']
       }
     },
@@ -605,6 +608,11 @@ const content = {
             title: 'בדיקה תעשייתית',
             description: 'פתרונות בדיקה אוטומטיים למתקני ייצור ומרכזי עיבוד.',
             features: ['בקרת איכות', 'ניטור בטיחות', 'אופטימיזציה של תהליכים']
+          },
+          {
+            title: 'מחקר ופיתוח',
+            description: 'פלטפורמת רובוטיקה מתקדמת למוסדות חינוך וארגוני מחקר.',
+            features: ['SDK פתוח', 'פיתוח אלגוריתמים', 'מחקר אקדמי']
           }
         ]
       },
@@ -625,13 +633,8 @@ const content = {
       },
       info: [
         {
-          title: 'טלפון',
-          value: '+1 (555) 123-4567',
-          description: 'א׳-ה׳ 9:00-18:00'
-        },
-        {
           title: 'אימייל',
-          value: 'info@chiral-robotics.com',
+          value: 'info@chiralrobotics.com',
           description: 'אנו מגיבים תוך 2 שעות'
         },
         {
@@ -684,7 +687,6 @@ const content = {
           contactPerson: 'השם המלא שלך',
           role: 'התפקיד שלך בחברה',
           email: 'your.email@company.com',
-          phone: '+972 50-123-4567',
           location: 'עיר, מדינה',
           message: 'אנא תאר את דרישות הפרויקט שלך, האתגרים ואיך הפתרונות הרובוטיים שלנו יכולים לעזור...'
         },

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, Send, Loader2, CheckCircle } from 'lucide-react'
+import { Mail, Send, Loader2, CheckCircle } from 'lucide-react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
@@ -68,9 +68,6 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center">
               <div className="text-xl font-bold text-primary">CHIRAL</div>
-              <div className="ml-2 text-sm text-muted-foreground">
-                Robotics
-              </div>
             </div>
             <p className="text-sm text-muted-foreground">
               CHIRAL has established itself as a leading global provider of advanced quadruped robotics solutions.
@@ -169,11 +166,7 @@ const Footer = () => {
               </Button>
             </form>
             
-            <div className="space-y-1 text-xs text-muted-foreground">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-3 w-3 icon-secondary" />
-                <span>+1-XXX-XXX-XXXX</span>
-              </div>
+            <div className="text-xs text-muted-foreground">
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3 icon-secondary" />
                 <span>info@chiralrobotics.com</span>
@@ -185,7 +178,7 @@ const Footer = () => {
         <div className="mt-8 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground">
-              © 2024 CHIRAL Robotics Solutions Ltd. All rights reserved.
+              © 2025 CHIRAL Robotics Solutions Ltd. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-sm text-muted-foreground hover:text-primary">

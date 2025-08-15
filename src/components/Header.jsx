@@ -35,7 +35,7 @@ const Header = () => {
       {/* Skip to main content link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-primary text-white px-4 py-2 rounded-md text-sm font-medium"
       >
         Skip to main content
       </a>
@@ -52,7 +52,7 @@ const Header = () => {
         <div className="container-apple">
           <div className="flex justify-between items-center h-14">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-1 group">
+            <Link to="/" className="flex items-center group">
               <motion.div 
                 className="text-xl font-semibold text-black"
                 whileHover={{ scale: 1.05 }}
@@ -60,9 +60,6 @@ const Header = () => {
               >
                 CHIRAL
               </motion.div>
-              <span className="text-xs text-gray-500 font-normal">
-                Robotics
-              </span>
             </Link>
 
             {/* Desktop Navigation - Apple Style */}
@@ -98,7 +95,7 @@ const Header = () => {
             <div className="hidden lg:flex items-center space-x-6">
               <Link 
                 to="/contact" 
-                className="text-sm font-medium text-gray-600 hover:text-black transition-colors"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 Request Demo
               </Link>

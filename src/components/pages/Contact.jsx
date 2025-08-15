@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { ArrowRight, ArrowLeft, CheckCircle, AlertCircle, Phone, Mail, MapPin, Clock, Send, Building2, User, Mail as MailIcon, MessageSquare, Target, Calendar, Shield } from 'lucide-react'
+import { ArrowRight, ArrowLeft, CheckCircle, AlertCircle, Mail, Send, Building2, User, Mail as MailIcon, MessageSquare, Target, Calendar, Shield } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { apiRequest, useErrorHandler, createValidationError } from '../../utils/errorHandler'
 import { InlineLoading } from '../ui/LoadingComponents'
@@ -95,28 +95,10 @@ const Contact = () => {
 
   const contactInfo = [
     {
-      icon: Phone,
-      title: t('contact.info.0.title'),
-      value: t('contact.info.0.value'),
-      description: t('contact.info.0.description')
-    },
-    {
       icon: Mail,
       title: t('contact.info.1.title'),
       value: t('contact.info.1.value'),
       description: t('contact.info.1.description')
-    },
-    {
-      icon: MapPin,
-      title: t('contact.info.2.title'),
-      value: t('contact.info.2.value'),
-      description: t('contact.info.2.description')
-    },
-    {
-      icon: Clock,
-      title: t('contact.info.3.title'),
-      value: t('contact.info.3.value'),
-      description: t('contact.info.3.description')
     }
   ]
 
@@ -263,7 +245,7 @@ const Contact = () => {
                   type="text"
                   value={formData.contactPerson}
                   onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder={t('contact.form.placeholders.contactPerson')}
                   required
                 />
@@ -277,7 +259,7 @@ const Contact = () => {
                   type="text"
                   value={formData.role}
                   onChange={(e) => setFormData({...formData, role: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder={t('contact.form.placeholders.role')}
                 />
               </div>
@@ -297,7 +279,7 @@ const Contact = () => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder={t('contact.form.placeholders.email')}
                 />
               </div>
@@ -310,7 +292,7 @@ const Contact = () => {
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder={t('contact.form.placeholders.phone')}
                 />
               </div>
@@ -342,7 +324,7 @@ const Contact = () => {
                 <select
                   value={formData.industry}
                   onChange={(e) => setFormData({...formData, industry: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 >
                   <option value="">Select your industry</option>
                   {industries.map((industry) => (
@@ -358,7 +340,7 @@ const Contact = () => {
                 <select
                   value={formData.projectType}
                   onChange={(e) => setFormData({...formData, projectType: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 >
                   <option value="">Select project type</option>
                   {projectTypes.map((type) => (
@@ -376,7 +358,7 @@ const Contact = () => {
                 <select
                   value={formData.timeline}
                   onChange={(e) => setFormData({...formData, timeline: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 >
                   <option value="">Select timeline</option>
                   {timelines.map((timeline) => (
@@ -392,7 +374,7 @@ const Contact = () => {
                 <select
                   value={formData.budget}
                   onChange={(e) => setFormData({...formData, budget: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 >
                   <option value="">Select budget range</option>
                   {budgetRanges.map((range) => (
@@ -436,7 +418,7 @@ const Contact = () => {
                           : formData.specificNeeds.filter(n => n !== need)
                         setFormData({...formData, specificNeeds: updated})
                       }}
-                      className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                      className="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary"
                     />
                     <span className="text-sm text-gray-700">{need}</span>
                   </label>
@@ -457,7 +439,7 @@ const Contact = () => {
                       value={method}
                       checked={formData.preferredContact === method}
                       onChange={(e) => setFormData({...formData, preferredContact: e.target.value})}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
                     />
                     <span className="text-sm text-gray-700 capitalize">
                       {method === 'video-call' ? 'Video Call' : method}
@@ -481,7 +463,7 @@ const Contact = () => {
         <section className="pt-20 pb-16">
           <div className="container-apple text-center space-y-6">
             <motion.p 
-              className="text-sm font-semibold text-blue-600 tracking-wider uppercase"
+              className="text-sm font-semibold icon-primary tracking-wider uppercase"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -512,24 +494,21 @@ const Contact = () => {
         {/* Contact Information Cards */}
         <AnimatedSection className="pb-16">
           <div className="container-apple">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {contactInfo.map((info, index) => (
-                <motion.div
-                  key={index}
-                  className="card-apple p-6 text-center hover-lift"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="w-12 h-12 bg-gray-100 rounded-xl p-3 mx-auto mb-4">
-                    <info.icon className="w-full h-full icon-secondary" />
-                  </div>
-                  <h3 className="text-subtitle mb-1">{info.title}</h3>
-                  <p className="text-body text-gray-900 mb-1">{info.value}</p>
-                  <p className="text-caption text-gray-500">{info.description}</p>
-                </motion.div>
-              ))}
+            <div className="flex justify-center">
+              <motion.div
+                className="card-apple p-8 text-center hover-lift max-w-md"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <div className="w-16 h-16 bg-gray-50 rounded-xl p-4 mx-auto mb-6">
+                  <Mail className="w-full h-full icon-primary" />
+                </div>
+                <h3 className="text-title mb-2">{contactInfo[0].title}</h3>
+                <p className="text-body-large text-gray-900 mb-2">{contactInfo[0].value}</p>
+                <p className="text-body text-gray-500">{contactInfo[0].description}</p>
+              </motion.div>
             </div>
           </div>
         </AnimatedSection>
@@ -544,7 +523,7 @@ const Contact = () => {
                   {steps.map((step, index) => (
                     <div key={step.id} className="flex items-center">
                       <div className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
-                        step.id <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-400'
+                        step.id <= currentStep ? 'bg-primary text-white' : 'bg-gray-200 text-gray-400'
                       }`}>
                         {step.id < currentStep ? (
                           <CheckCircle className="h-5 w-5 icon-success" />
@@ -554,7 +533,7 @@ const Contact = () => {
                       </div>
                       {index < steps.length - 1 && (
                         <div className={`w-12 h-1 mx-2 transition-all ${
-                          step.id < currentStep ? 'bg-blue-600' : 'bg-gray-200'
+                          step.id < currentStep ? 'bg-primary' : 'bg-gray-200'
                         }`} />
                       )}
                     </div>
@@ -582,7 +561,7 @@ const Contact = () => {
                 >
                   {formSuccess ? (
                     <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-green-100 rounded-full p-4 mx-auto mb-6">
+                      <div className="w-16 h-16 bg-gray-50 rounded-full p-4 mx-auto mb-6">
                         <CheckCircle className="w-full h-full icon-success" />
                       </div>
                       <h3 className="text-title font-bold mb-4">{t('contact.form.success.title')}</h3>
@@ -599,9 +578,9 @@ const Contact = () => {
                       {renderStepContent()}
                       
                       {formError && (
-                        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+                        <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-center gap-3">
                           <AlertCircle className="h-5 w-5 icon-error flex-shrink-0" />
-                          <p className="text-red-700">{formError}</p>
+                          <p className="text-gray-700">{formError}</p>
                         </div>
                       )}
                       

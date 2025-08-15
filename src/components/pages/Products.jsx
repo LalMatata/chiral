@@ -105,9 +105,9 @@ const Products = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative pt-20 pb-16 bg-gradient-to-b from-gray-50 to-white">
-          <div className="container mx-auto px-4 text-center space-y-6">
+          <div className="container-apple text-center space-y-6">
             <motion.p 
-              className="text-sm font-semibold text-blue-600 tracking-wider uppercase"
+              className="text-sm font-semibold icon-primary tracking-wider uppercase"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -116,7 +116,7 @@ const Products = () => {
             </motion.p>
             
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900"
+              className="text-headline"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -125,7 +125,7 @@ const Products = () => {
             </motion.h1>
             
             <motion.p 
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
+              className="text-body-large text-gray-600 max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -137,7 +137,7 @@ const Products = () => {
 
         {/* Interactive Product Showcase */}
         <AnimatedSection className="py-16">
-          <div className="container mx-auto px-4 max-w-6xl">
+          <div className="container-apple max-w-6xl">
             {/* Product Selector Tabs */}
             <div className="flex justify-center mb-12">
               <div className="inline-flex p-1 bg-gray-100 rounded-full">
@@ -147,7 +147,7 @@ const Products = () => {
                     onClick={() => setSelectedProduct(index)}
                     className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                       selectedProduct === index
-                        ? 'bg-black text-white shadow-lg'
+                        ? 'bg-primary text-white shadow-lg'
                         : 'text-gray-600 hover:text-black'
                     }`}
                   >
@@ -204,7 +204,7 @@ const Products = () => {
                       {/* Badge */}
                       {products[selectedProduct].featured && (
                         <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 text-xs font-semibold text-white rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center gap-1">
+                          <span className="px-3 py-1 text-xs font-semibold text-white rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center gap-1">
                             <Star className="h-3 w-3" />
                             {products[selectedProduct].badge}
                           </span>
@@ -224,7 +224,7 @@ const Products = () => {
                             })}
                             className={`w-2 h-2 rounded-full transition-all ${
                               (activeImageIndex[products[selectedProduct].id] || 0) === index
-                                ? 'bg-black w-6'
+                                ? 'bg-primary w-6'
                                 : 'bg-gray-300'
                             }`}
                           />
@@ -236,20 +236,20 @@ const Products = () => {
                   {/* Product Details */}
                   <div className="space-y-8">
                     <div>
-                      <h2 className="text-3xl lg:text-4xl font-bold mb-2">
+                      <h2 className="text-title mb-2">
                         {products[selectedProduct].name}
                       </h2>
-                      <p className="text-xl text-blue-600 mb-4">
+                      <p className="text-subtitle icon-primary mb-4">
                         {products[selectedProduct].tagline}
                       </p>
-                      <p className="text-lg text-gray-600">
+                      <p className="text-body-large text-gray-600">
                         {products[selectedProduct].description}
                       </p>
                     </div>
 
                     {/* Key Features */}
                     <div>
-                      <h3 className="font-semibold text-lg mb-4">Key Features</h3>
+                      <h3 className="text-subtitle mb-4">Key Features</h3>
                       <div className="space-y-2">
                         {products[selectedProduct].features.slice(0, 4).map((feature, index) => (
                           <motion.div 
@@ -259,8 +259,8 @@ const Products = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                           >
-                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                            <span className="text-gray-700">{feature}</span>
+                            <CheckCircle className="h-5 w-5 icon-success flex-shrink-0" />
+                            <span className="text-body text-gray-700">{feature}</span>
                           </motion.div>
                         ))}
                       </div>
@@ -270,14 +270,14 @@ const Products = () => {
                     <div className="flex flex-col sm:flex-row gap-4">
                       <Link 
                         to={`/products/${products[selectedProduct].id}`}
-                        className="inline-flex items-center justify-center px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-900 transition-colors group"
+                        className="btn-apple btn-apple-primary group"
                       >
                         View Full Details
                         <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                       </Link>
                       <Link 
                         to="/contact"
-                        className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                        className="btn-apple btn-apple-secondary"
                       >
                         Request Information
                       </Link>
@@ -291,12 +291,12 @@ const Products = () => {
 
         {/* Comparison Section */}
         <AnimatedSection className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
+          <div className="container-apple">
             <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+              <h2 className="text-headline mb-4">
                 {homeData?.products?.comparison?.title || 'Compare Our Solutions'}
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-body-large text-gray-600">
                 {homeData?.products?.comparison?.subtitle || 'Find the perfect match for your operational requirements.'}
               </p>
             </div>
@@ -305,31 +305,31 @@ const Products = () => {
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}
-                  className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="product-card p-8 hover-lift"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${product.color} p-3 mb-6`}>
-                    <product.icon className="w-full h-full text-white" />
+                    <product.icon className="w-full h-full icon-on-primary" />
                   </div>
                   
-                  <h3 className="text-xl font-bold mb-2">{product.name}</h3>
-                  <p className="text-blue-600 font-medium mb-4">{product.pricing}</p>
+                  <h3 className="text-title-sm mb-2">{product.name}</h3>
+                  <p className="text-subtitle icon-primary mb-4">{product.pricing}</p>
                   
                   <div className="space-y-3 mb-6">
                     {Object.entries(product.specifications).slice(0, 4).map(([key, value]) => (
                       <div key={key} className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-sm text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-                        <span className="text-sm font-medium">{value}</span>
+                        <span className="text-caption text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+                        <span className="text-caption font-medium">{value}</span>
                       </div>
                     ))}
                   </div>
                   
                   <Link 
                     to={`/products/${product.id}`}
-                    className="flex items-center justify-center text-blue-600 font-medium hover:text-blue-700 transition-colors"
+                    className="flex items-center justify-center icon-primary text-body-sm font-medium hover:gap-3 transition-all"
                   >
                     Learn More
                     <ChevronRight className="ml-2 h-5 w-5" />
@@ -342,24 +342,24 @@ const Products = () => {
 
         {/* CTA Section */}
         <AnimatedSection className="py-16 bg-black text-white">
-          <div className="container mx-auto px-4 text-center space-y-8">
-            <h2 className="text-3xl lg:text-4xl font-bold">
+          <div className="container-apple text-center space-y-8">
+            <h2 className="text-headline">
               Ready to Transform Your Operations?
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-body-large text-gray-300 max-w-3xl mx-auto">
               {homeData?.products?.support?.subtitle || 'Our robotics experts are standing by to help you select and implement the perfect solution for your needs.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 to="/contact" 
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors group"
+                className="btn-apple bg-white text-black hover:bg-gray-100 group"
               >
                 Get Expert Consultation
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
                 to="/applications" 
-                className="inline-flex items-center justify-center px-8 py-4 border border-white text-white font-medium rounded-lg hover:bg-white hover:text-black transition-all"
+                className="btn-apple border border-white text-white hover:bg-white hover:text-black transition-all"
               >
                 View Use Cases
               </Link>

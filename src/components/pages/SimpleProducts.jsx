@@ -23,7 +23,7 @@ const SimpleProducts = () => {
             {productItems.map((item, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                <p className="text-blue-600 font-medium mb-4">{item.subtitle}</p>
+                <p className="text-subtitle icon-primary mb-4">{item.subtitle}</p>
                 <p className="text-gray-600 mb-6">{item.description}</p>
                 
                 {item.features && (
@@ -38,7 +38,7 @@ const SimpleProducts = () => {
                 )}
                 
                 <div className="text-center">
-                  <span className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg">
+                  <span className="inline-block px-4 py-2 bg-primary text-white rounded-lg">
                     {item.badge}
                   </span>
                 </div>

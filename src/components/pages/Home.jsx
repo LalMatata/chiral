@@ -66,11 +66,9 @@ const Home = () => {
         {/* Hero Section - Apple Style */}
         <section ref={heroRef} className="relative bg-gradient-to-b from-gray-50 to-white">
           <motion.div 
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-white/50 to-white"
             style={{ y: smoothHeroY, scale: heroScale }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white" />
-          </motion.div>
+          />
           
           <div className="container-apple">
             <div className="pt-20 pb-8 text-center space-y-8">
@@ -82,7 +80,7 @@ const Home = () => {
                 style={{ opacity: heroOpacity }}
               >
                 <motion.p 
-                  className="text-sm font-semibold text-blue-600 tracking-wider uppercase"
+                  className="text-sm font-semibold icon-primary tracking-wider uppercase"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 1, delay: 0.5 }}

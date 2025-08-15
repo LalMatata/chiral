@@ -12,9 +12,8 @@ import { PageLoadingOverlay } from './components/ui/LoadingComponents'
 // Components
 import Header from './components/Header'
 import Footer from './components/Footer'
-import WhatsAppButton from './components/WhatsAppButton'
 import Home from './components/pages/Home'
-import SimpleProducts from './components/pages/SimpleProducts'
+import Products from './components/pages/Products'
 import ProductDetail from './components/pages/ProductDetail'
 import Applications from './components/pages/Applications'
 import About from './components/pages/About'
@@ -44,7 +43,7 @@ function AnimatedRoutes() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<SimpleProducts />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/products/:model" element={<ProductDetail />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/about" element={<About />} />
@@ -66,7 +65,6 @@ function App() {
             <AnimatedRoutes />
           </main>
           <Footer />
-          <WhatsAppButton />
         </div>
       </Router>
     </LanguageProvider>
