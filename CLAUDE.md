@@ -116,6 +116,41 @@ The application follows a component-based architecture with clear separation of 
 - Tailwind CSS purging for minimal CSS bundle
 - Component memoization where beneficial
 
+## Project Structure
+
+### Organized Directory Layout
+```
+chiral_repo/
+├── src/                    # Frontend source code
+│   ├── components/         # React components
+│   ├── contexts/          # React contexts (LanguageContext)
+│   ├── assets/            # Images and static assets
+│   └── utils/             # Frontend utilities
+├── docs/                  # Documentation (organized by category)
+│   ├── brand/             # Product docs and PDFs
+│   ├── deployment/        # Deployment guides
+│   ├── development/       # Development docs
+│   └── testing/           # Test plans and reports
+├── tests/                 # Test files (organized by type)
+│   ├── frontend/          # Frontend test files
+│   ├── security/          # Security test results
+│   └── validation/        # Validation and performance tests
+├── database/              # SQLite database and models
+├── routes/                # Express.js API routes
+├── services/              # Backend services (EmailQueue)
+├── middleware/            # Authentication middleware
+├── archive/               # Legacy/unused files
+├── data/                  # Database files (leads, brochures)
+└── uploads/               # File upload storage
+```
+
+### Key Documentation Locations
+- **Brand & Products**: `docs/brand/` - Product specifications, PDFs
+- **Development**: `docs/development/` - Setup guides, bug tracking
+- **Deployment**: `docs/deployment/` - DNS, marketing, deployment guides
+- **Testing**: `docs/testing/` - Test plans, security assessments
+- **Project Status**: `PROJECT_STATUS.md` - Current completion status
+
 ## Important Notes
 
 - Always use PNPM for package management (not npm or yarn)
