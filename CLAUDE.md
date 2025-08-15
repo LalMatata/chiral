@@ -170,3 +170,82 @@ chiral_repo/
 - Admin dashboard for managing leads and email templates
 - File upload handling for brochures
 - RESTful API endpoints for frontend integration
+
+## 🔒 Security and Privacy
+
+### Sensitive Information Protection
+**CRITICAL**: The following information is NEVER uploaded to GitHub:
+
+#### 🔑 Protected API Keys and Credentials
+- `RESEND_API_KEY` - Email service API key
+- `JWT_SECRET` - JSON Web Token signing key  
+- `ADMIN_API_KEY` - Administrator API key
+- `GA_MEASUREMENT_ID` - Google Analytics tracking ID
+- `FACEBOOK_PIXEL_ID` - Facebook Pixel tracking ID
+- `BAIDU_ANALYTICS_ID` - Baidu Analytics ID
+- Vercel/deployment platform API tokens
+- GitHub Personal Access Tokens
+
+#### 📄 Proprietary Content Protection
+- Product PDF documents (copyright protected third-party content)
+- `docs/brand/PDF files/` - All product specification PDFs
+- `docs/brand/CHIRAL_Product_Database.md` - Product database
+- `docs/brand/CHIRAL_Product_Summary.md` - Product summaries
+- `archive/` folder - Contains experimental code and proprietary processing tools
+
+#### 🌐 Deployment and Personal Information
+- Production website URLs and preview links
+- Personal email addresses
+- Company-specific email configurations
+- Deployment platform credentials
+- SEO strategy configurations
+
+### Security Configuration Files
+- **Security Guide**: `docs/deployment/SECURITY_SETUP.md`
+- **Environment Template**: `.env.example` (use to create local `.env`)
+- **Protected Patterns**: See comprehensive `.gitignore` configuration
+
+### Development Security Practices
+1. **Environment Variables**: Copy `.env.example` to `.env` and fill with real values
+2. **Local Storage**: Keep sensitive files in local directories only
+3. **Team Collaboration**: Share credentials through secure channels, never in code
+4. **Regular Rotation**: Periodically update API keys and secrets
+
+## Project History and Major Changes
+
+### Recent Major Refactoring (August 2025)
+1. **Repository Structure Reorganization**: 
+   - Moved from 21+ root-level documentation files to organized `docs/` structure
+   - Created `tests/` folder with categorized test files
+   - Archived legacy content in `archive/` folder
+
+2. **Security Implementation**:
+   - Comprehensive `.gitignore` update to protect sensitive information
+   - Removed proprietary PDF documents and product databases from git tracking
+   - Hidden production URLs and deployment information
+
+3. **Website Functionality Restoration**:
+   - Fixed critical navigation issues caused by AnimatePresence configuration
+   - Resolved `stats.map is not a function` error in Home component
+   - Replaced problematic complex components with working alternatives
+   - Implemented `SimpleProducts.jsx` for stable product display
+
+4. **Content Integration**:
+   - All product information (X30, X20, Lite3 series) integrated into `LanguageContext`
+   - Bilingual support fully functional for English/Hebrew
+   - Apple-style design system implemented throughout
+
+### Key Technical Decisions Made
+- **Frontend Focus**: Prioritized stable frontend functionality over complex full-stack features
+- **Component Simplification**: Replaced animation-heavy components with reliable alternatives
+- **Security-First Approach**: Implemented comprehensive information protection before GitHub upload
+- **Organized Documentation**: Structured project documentation for long-term maintainability
+
+### Current Status (August 2025)
+✅ **Fully Functional Website**: All navigation, pages, and content working correctly
+✅ **Security Protected**: All sensitive information properly secured
+✅ **Clean Architecture**: Organized file structure and clear documentation
+✅ **Production Ready**: Optimized builds and deployment configuration
+✅ **Team Ready**: Comprehensive guides for development and deployment
+
+The website successfully showcases CHIRAL's robotic solutions with professional design, optimal performance, and complete security protection.
