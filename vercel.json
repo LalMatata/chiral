@@ -1,12 +1,11 @@
 {
   "framework": "vite",
-  "buildCommand": "vite build",
+  "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
-  "devCommand": "npm run dev",
-  "installCommand": "cp package.frontend.json package.json && npm install --legacy-peer-deps",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install --frozen-lockfile",
   "git": {
     "deploymentEnabled": {
-      "claude-code1": true,
       "master": true
     }
   },
@@ -25,23 +24,10 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
         },
         {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
@@ -51,6 +37,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "alias": ["dami.homes"]
+  ]
 }
