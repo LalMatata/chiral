@@ -13,7 +13,7 @@ CHIRAL Robotics Website - A modern React-based bilingual promotional website for
 # Install dependencies (using PNPM)
 pnpm install
 
-# Start development server (runs on http://localhost:5173)
+# Start development server (runs on localhost)
 pnpm run dev
 
 # Start full development environment (frontend + backend server)
@@ -32,11 +32,13 @@ pnpm run preview
 pnpm run lint
 ```
 
-### Deployment (Manus Cloud Platform)
+### Deployment
 ```bash
-# Build and deploy to production
+# Build for production
 pnpm run build
-manus deploy --framework react --project-dir .
+
+# Deploy according to your hosting platform
+# Deployment commands are kept private for security
 ```
 
 ## High-Level Architecture
@@ -156,7 +158,7 @@ chiral_repo/
 - Always use PNPM for package management (not npm or yarn)
 - The project uses absolute imports with `@/` alias pointing to `src/`
 - ESLint is configured with React-specific rules
-- The website is deployed to Manus Cloud Platform at https://nkdzerew.manus.space
+- The website deployment URL is kept private for security
 - Full-stack application with Express.js backend for lead management and email handling
 - Backend includes SQLite database, email queue system, and admin dashboard
 - No environment variables required for basic functionality

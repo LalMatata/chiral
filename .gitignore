@@ -106,12 +106,70 @@ temp/
 *.sw?
 
 
-# Environment variables
+# Environment variables and sensitive config
 .env
+.env.*
+!.env.example
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Data files
+# API Keys and secrets
+*.key
+*.pem
+*.p12
+secrets/
+config/secrets.json
+.secrets
+
+# Deployment tokens
+.vercel
+.netlify
+.firebase
+
+# Personal configuration
+.vscode/settings.json
+.idea/workspace.xml
+
+# Data files (potentially sensitive)
 data/
+*.db
+*.sqlite
+
+# Logs (may contain sensitive information)
+logs/
+*.log
+
+# Backup files
+*.backup
+*.bak
+
+# Proprietary documents and files
+docs/brand/PDF files/
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+docs/brand/CHIRAL_Product_Database.md
+docs/brand/CHIRAL_Product_Summary.md
+docs/brand/PRODUCT_DOC.md
+
+# Archive folder (contains proprietary content)
+archive/
+
+# SEO and Analytics configuration
+google-analytics.json
+ga-config.js
+seo-config.json
+sitemap-config.js
+robots-config.txt
+
+# Marketing and tracking
+*-tracking.js
+*-analytics.*
+marketing-config.*
 
 # Test files
 *.test.html
