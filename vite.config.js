@@ -14,6 +14,27 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      external: [
+        // Externalize backend dependencies that shouldn't be bundled
+        'bcrypt',
+        'better-sqlite3',
+        'cors',
+        'csv-writer',
+        'express',
+        'jsonwebtoken',
+        'multer',
+        'node-cron',
+        'resend',
+        'socket.io',
+        'xlsx'
+      ]
+    }
+  },
+  optimizeDeps: {
+    exclude: ['bcrypt', 'better-sqlite3', 'express', 'socket.io']
+  },
   server: {
     proxy: {
       '/api': {
